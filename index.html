@@ -5,201 +5,260 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- SEO & Social -->
-    <title>James Bell | Games Design & Interactive Development</title>
+    <title>James Bell | Games Development Lecturer – Belfast Met</title>
+
     <meta name="description"
-        content="James Bell – Lecturer and Games Design specialist with a passion for interactive systems, game mechanics, and creative technology." />
+        content="James Bell – Lecturer at Belfast Met Castlereagh and Course Coordinator for Level 3 Games Development." />
 
-    <meta property="og:title" content="James Bell | Games Design & Interactive Development" />
-    <meta property="og:description"
-        content="Lecturer, games designer, and technologist focused on interactive experiences, game mechanics, and creative coding." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://jamesbell2021.github.io/web/" />
-
-    <!-- Styles -->
     <style>
         html,
-     
-
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #000;
-    color: #e5e5e5;
-    font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    overflow-x: hidden; /* ✅ allow vertical scroll */
-}
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #e5e5e5;
+            font-family: "Segoe UI", system-ui, sans-serif;
+            overflow-x: hidden;
         }
 
-        /* Overlay panel */
+        canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
         .content {
             position: relative;
             z-index: 10;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
+            padding: 4rem 2rem;
         }
 
         .card {
             max-width: 900px;
-            background: rgba(0, 0, 0, 0.75);
-            border: 1px solid rgba(0, 255, 120, 0.2);
-            backdrop-filter: blur(10px);
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.78);
+            border: 1px solid rgba(0, 255, 120, 0.25);
+            backdrop-filter: blur(12px);
             padding: 3rem;
-            box-shadow: 0 0 40px rgba(0, 255, 120, 0.15);
+            box-shadow: 0 0 40px rgba(0, 255, 120, 0.18);
         }
 
         h1 {
             margin-top: 0;
-            font-size: 2.5rem;
+            font-size: 2.6rem;
             color: #7CFFB2;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
         }
 
         h2 {
-            margin-top: 2.5rem;
+            margin-top: 2.6rem;
             font-size: 1.4rem;
             color: #9effc9;
         }
 
-        p {
-            font-size: 1.05rem;
-            line-height: 1.7;
-            margin-top: 1rem;
+        h3 {
+            margin-top: 1.8rem;
+            font-size: 1.2rem;
+            color: #b6ffd8;
         }
 
-        .accent {
+        p,
+        li {
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+
+        ul {
+            margin-top: 1rem;
+            padding-left: 1.2rem;
+        }
+
+        a {
             color: #7CFFB2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
 
         footer {
             margin-top: 3rem;
             font-size: 0.9rem;
             opacity: 0.7;
+            text-align: center;
         }
 
-        /* Subtle matrix glow */
         .matrix-glow {
-            text-shadow: 0 0 10px rgba(124, 255, 178, 0.5);
+            text-shadow: 0 0 12px rgba(124, 255, 178, 0.55);
+        }
+
+        /* TERMINAL */
+        .terminal {
+            margin-top: 3rem;
+            background: #000;
+            border: 1px solid rgba(124, 255, 178, 0.4);
+            padding: 1rem;
+            font-family: Consolas, monospace;
+        }
+
+        .terminal-output {
+            white-space: pre-wrap;
+            min-height: 140px;
+            margin-bottom: 0.5rem;
+        }
+
+        .terminal-input {
+            display: flex;
+        }
+
+        .terminal-input span {
+            margin-right: 0.5rem;
+            color: #7CFFB2;
+        }
+
+        .terminal-input input {
+            background: none;
+            border: none;
+            outline: none;
+            color: #e5e5e5;
+            flex: 1;
+            font-family: inherit;
+            font-size: 1rem;
         }
     </style>
 </head>
 
 <body>
-    <noscript>This site uses JavaScript for visual effects. Please enable JavaScript.</noscript>
-
-    <!-- Matrix Canvases -->
+    <!-- Matrix -->
     <canvas id="matrixCanvas1"></canvas>
     <canvas id="matrixCanvas2"></canvas>
     <canvas id="matrixCanvas3"></canvas>
     <canvas id="overlayCanvas"></canvas>
 
-    <!-- Foreground Content -->
-    <div class="content">
-        <div class="card">
+    <main class="content">
+        <section class="card">
             <h1 class="matrix-glow">James Bell</h1>
 
             <p>
-                I am a <span class="accent">Lecturer in Games Design and Interactive Development</span> with a strong
-                passion for creating meaningful, engaging digital experiences. My work sits at the intersection of
-                creativity, technology, and problem‑solving — where code becomes play.
+                Lecturer in Games Development at <strong>Belfast Metropolitan College</strong>,
+                Castlereagh Campus, and <strong>Course Coordinator for the Level 3 Games Development programme</strong>.
             </p>
 
-            <h2>About Me</h2>
-            
-<h2>Lecturer & Course Coordinator</h2>
-
-<p>
-    I am currently a <span class="accent">Lecturer at Belfast Metropolitan College</span>,
-    based at the <span class="accent">Castlereagh Campus</span>, where I specialise in
-    games design, interactive development, and creative technologies.
-</p>
-
-<p>
-    Alongside my lecturing role, I am the <span class="accent">Course Coordinator for the
-        Level 3 Games Development programme</span>. In this position, I lead the
-    design, delivery, and continuous development of the course, ensuring it remains
-    relevant, technically robust, and aligned with both industry expectations and
-    progression routes into higher education.
-</p>
-
-<p>
-    My responsibilities include curriculum planning, project design, assessment strategy,
-    and the integration of modern tools and workflows. I work closely with students to help
-    them develop not only their technical abilities, but also the creative thinking,
-    problem‑solving skills, and professional mindset required to succeed in the games
-    industry.
-</p>
-
-<h2>Teaching Philosophy</h2>
-
-<p>
-    As an educator, my approach is rooted in <span class="accent">learning through
-        making</span>. I place a strong emphasis on practical development, iterative
-    design, and experimentation, encouraging students to explore ideas, take creative risks,
-    and learn from failure.
-</p>
-
-<p>
-    I focus on helping learners understand how and why systems work — from core gameplay
-    loops and mechanics to scripting logic, engine workflows, and real‑time interaction.
-    By demystifying complex concepts, I empower students to become confident, independent
-    creators rather than passive users of tools.
-</p>
-
-<p>
-    My aim is to create an inclusive and supportive learning environment that mirrors
-    real‑world development practices, preparing students for progression into university‑level
-    study or entry‑level roles within creative and digital industries.
-</p>
+            <h2>Role & Responsibilities</h2>
 
             <p>
-                My background spans game design theory, technical implementation, and creative experimentation.
-                I specialise in helping learners understand how systems work beneath the surface — from gameplay
-                mechanics and level design to scripting, data‑driven logic, and real‑time interaction.
+                I design and deliver an industry‑focused curriculum that prepares learners for progression into
+                higher education or entry‑level roles within the games and creative technology industries.
             </p>
 
             <p>
-                I believe the best games are not just visually impressive, but <span class="accent">designed with
-                    intent</span>: every mechanic teaches the player something, every system supports the experience,
-                and every choice has meaning.
+                As Course Coordinator, I oversee curriculum planning, assessment, quality assurance, and the
+                integration of professional game‑development workflows aligned with studio practice.
             </p>
 
-            <h2>Passion for Games Design</h2>
-            <p>
-                Games design, for me, is about more than entertainment. It is a powerful medium for storytelling,
-                learning, experimentation, and self‑expression. I am particularly interested in:
-            </p>
+            <h2>Level 3 Games Development – Course Overview</h2>
 
             <p>
-                • Interactive systems and player agency<br />
-                • Gameplay mechanics and systemic design<br />
-                • Prototyping using engines such as Unreal Engine<br />
-                • Technical problem solving through creative coding<br />
-                • Teaching design thinking through play
+                The games industry is one of the fastest‑growing creative sectors globally. At Belfast Met,
+                students choose a specialist pathway aligned to their strengths and ambitions.
             </p>
 
+            <h3>Castlereagh Campus – Game Development</h3>
+            <ul>
+                <li>Unreal Engine and Blueprint scripting</li>
+                <li>Technical gameplay systems and mechanics</li>
+                <li>2D, 3D, VR, and AR development</li>
+                <li>Game audio creation and implementation</li>
+                <li>Professional, project‑based studio workflows</li>
+            </ul>
+
+            <h3>Titanic Quarter Campus – Game Art & Design</h3>
+            <ul>
+                <li>Concept art and visual development</li>
+                <li>2D & 3D modelling and animation</li>
+                <li>UI / UX and environment design</li>
+                <li>Portfolio‑focused creative practice</li>
+            </ul>
+
+            <h2>Teaching Philosophy</h2>
+
             <p>
-                Whether developing prototypes, mentoring students, or exploring new technologies, my focus is always
-                on bridging the gap between <span class="accent">creative vision</span> and <span
-                    class="accent">technical execution</span>.
+                My approach is grounded in <strong>learning through making</strong>. Students learn by building,
+                testing, failing, and refining ideas — mirroring professional development practice.
             </p>
+
+            <h2>Terminal Interface</h2>
+            <p>Type <strong>help</strong> to explore.</p>
+
+            <div class="terminal">
+                <div class="terminal-output" id="terminalOutput">
+JamesBellOS v1.0
+Type "help" for available commands.
+                </div>
+                <div class="terminal-input">
+                    <span>&gt;</span>
+                    <input id="terminalInput" autocomplete="off" />
+                </div>
+            </div>
+
+            <h2>Contact & Media</h2>
+
+            <p>Email: <a href="mailto:Jbell@belfastmet.ac.uk">Jbell@belfastmet.ac.uk</a></p>
+            <p>YouTube: <a href="https://www.youtube.com/@gamesdeveloper_belfast" target="_blank">
+                    youtube.com/@gamesdeveloper_belfast</a></p>
 
             <footer>
-                © James Bell · Games Design · Interactive Development
+                © James Bell · Belfast Metropolitan College · Games Development
             </footer>
-        </div>
-    </div>
+        </section>
+    </main>
+
+    <script>
+        const input = document.getElementById("terminalInput");
+        const output = document.getElementById("terminalOutput");
+
+        const commands = {
+            help: () => `
+Available commands:
+about        - Lecturer profile
+course       - Course overview
+tools        - Software used
+contact      - Contact details
+clear        - Clear terminal
+`,
+            about: () => `James Bell
+Lecturer & Course Coordinator
+Belfast Met – Castlereagh Campus`,
+            course: () => `Level 3 Games Development
+Castlereagh: Technical game development
+Titanic Quarter: Game art & design`,
+            tools: () => `Unreal Engine
+Blender
+Autodesk
+Adobe Suite
+VR & Audio Tools`,
+            contact: () => `Email: Jbell@belfastmet.ac.uk
+YouTube: @gamesdeveloper_belfast`,
+            clear: () => ""
+        };
+
+        input.addEventListener("keydown", e => {
+            if (e.key === "Enter") {
+                const cmd = input.value.trim().toLowerCase();
+                output.textContent += `\n> ${cmd}\n`;
+                output.textContent += commands[cmd]
+                    ?ot found. Type 'help'.";
+                output.scrollTop = output.scrollHeight;
+                input.value = "";
+            }
+        });
+    </script>
 
     <script src="matrix.js"></script>
 </body>
 
 </html>
+``
