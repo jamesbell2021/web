@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Day One — induction, your first task, and how to write about it</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F2E8; --ink:#1B1533;
+  --orange:#FF5A1F; --teal:#00A6A6; --yellow:#FFC93C; --pink:#F0468C;
+  --soft:#4A4166; --dim:#7C7395;
+  --shadow:5px 5px 0 var(--ink); --shadow-sm:3px 3px 0 var(--ink);
+  --border:3px solid var(--ink); --border-sm:2px solid var(--ink);
+  --disp:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;
+  background-image:radial-gradient(var(--ink) .5px,transparent .5px);background-size:22px 22px}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;line-height:1}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+a{color:var(--ink)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+
+/* title */
+.titlescreen{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px 20px;position:relative}
+.titlescreen .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:7px 14px;margin-bottom:22px}
+.titlescreen h1{font-size:clamp(46px,12vw,128px);margin:0;text-transform:uppercase}
+.titlescreen h1 em{font-style:normal;display:block;color:var(--orange);-webkit-text-stroke:2px var(--ink)}
+.titlescreen .sub{max-width:46ch;margin:24px 0 34px;font-size:18px}
+.blob{position:absolute;border:var(--border);z-index:-1}
+.b1{width:120px;height:120px;background:var(--teal);border-radius:50%;top:12%;left:8%}
+.b2{width:80px;height:80px;background:var(--pink);top:22%;right:11%;transform:rotate(14deg)}
+.b3{width:150px;height:44px;background:var(--orange);bottom:16%;left:14%;transform:rotate(-7deg)}
+.b4{width:60px;height:60px;background:var(--yellow);border-radius:50%;bottom:24%;right:16%}
+@media (max-width:640px){.blob{display:none}}
+
+.btn{background:var(--yellow);border:var(--border);box-shadow:var(--shadow);padding:16px 34px;font-family:var(--disp);font-weight:800;font-size:21px;text-transform:uppercase;transition:transform .1s,box-shadow .1s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn-sm{padding:11px 20px;font-size:15px;box-shadow:var(--shadow-sm)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:30;background:var(--ink);border-bottom:var(--border)}
+.nav-in{max-width:1000px;margin:0 auto;padding:8px 20px}
+.nav-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:3px 0}
+.nav-lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);padding-right:6px;min-width:74px}
+.nav-btn{background:transparent;border:2px solid transparent;color:#C9C2E0;font-family:var(--mono);font-size:12px;letter-spacing:.03em;padding:6px 9px;text-transform:uppercase}
+.nav-btn:hover{color:var(--paper);border-color:var(--soft)}
+.nav-btn[aria-current="true"]{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.progress{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;color:#9A92B8;margin-left:auto}
+.progress-bar{width:64px;height:8px;background:#3A3255;border:2px solid #5A5178}
+.progress-bar i{display:block;height:100%;background:var(--teal);width:0;transition:width .4s}
+
+/* pages */
+.page{padding:46px 0 70px}
+.page[hidden]{display:none}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:5px 11px;margin-bottom:14px}
+.tag.pm{background:var(--orange)}
+.page h2{font-size:clamp(28px,6vw,50px);margin:0 0 14px;text-transform:uppercase}
+.page h2 em{font-style:normal;color:var(--orange)}
+.page h3{font-size:23px;margin:36px 0 12px}
+.lede{font-size:18px;max-width:62ch;margin:0 0 28px}
+
+.card{background:#fff;border:var(--border);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px}
+.card h4{font-size:19px;margin:0 0 8px}
+.card p:last-child,.card ul:last-child,.card ol:last-child{margin-bottom:0}
+.card .big{font-family:var(--disp);font-weight:800;font-size:50px;line-height:.95;display:block;margin-bottom:2px}
+.tint-o{background:var(--orange);color:#fff}
+.tint-t{background:var(--teal);color:#fff}
+.tint-y{background:var(--yellow)}
+.tint-p{background:var(--pink);color:#fff}
+.tint-o a,.tint-t a,.tint-p a{color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+@media (max-width:720px){.grid2{grid-template-columns:1fr}}
+
+.steps{counter-reset:s;margin:0;padding:0;list-style:none}
+.steps li{counter-increment:s;position:relative;padding:0 0 0 52px;margin-bottom:18px;min-height:38px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:38px;height:38px;background:var(--teal);color:#fff;border:var(--border-sm);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:17px}
+.steps li b{font-family:var(--disp);font-weight:700;display:block;font-size:17px;margin-bottom:2px}
+.steps.orange li::before{background:var(--orange)}
+
+/* run of day */
+.run{background:#fff;border:var(--border);box-shadow:var(--shadow);padding:6px 22px;margin-bottom:18px}
+.run .slot{display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:var(--border-sm)}
+.run .slot:last-child{border-bottom:none}
+.run .slot .t{font-family:var(--mono);font-size:13.5px;min-width:104px;flex-shrink:0}
+.run .slot .w{font-family:var(--disp);font-weight:700;font-size:16.5px}
+.run .slot .d{color:var(--dim);font-size:14px;display:block;font-family:var(--body);font-weight:400}
+.run .slot.brk{background:var(--paper);margin:0 -22px;padding-left:22px;padding-right:22px}
+
+table{width:100%;border-collapse:collapse;background:#fff;border:var(--border);box-shadow:var(--shadow);margin-bottom:18px;font-size:15px}
+th,td{padding:11px 13px;text-align:left;border-bottom:var(--border-sm);vertical-align:top}
+th{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--paper);border-bottom:none}
+tr:last-child td{border-bottom:none}
+td a{word-break:break-word}
+.tablewrap{overflow-x:auto}
+
+.acc{background:#fff;border:var(--border);box-shadow:var(--shadow-sm);margin-bottom:12px}
+.acc-head{width:100%;display:flex;gap:14px;align-items:center;padding:16px 18px;background:none;border:none;text-align:left}
+.acc-head .n{font-family:var(--mono);font-size:12px;background:var(--ink);color:var(--paper);padding:4px 8px;flex-shrink:0}
+.acc-head .t{font-family:var(--disp);font-weight:700;font-size:17.5px;flex:1}
+.acc-head .cx{font-size:20px;color:var(--orange);font-weight:700}
+.acc-body{padding:0 18px 18px;border-top:2px dashed var(--ink)}
+.acc-body[hidden]{display:none}
+.acc-body dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-top:14px}
+.acc-body dd{margin:3px 0 0;font-size:15px}
+
+.round{background:#fff;border:var(--border);box-shadow:var(--shadow-sm);padding:20px 22px;margin-bottom:14px;border-left-width:8px;border-left-color:var(--pink)}
+.round .t{display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.round h4{margin:0;font-size:19px}
+.round .mins{font-family:var(--mono);font-size:12px;background:var(--ink);color:var(--paper);padding:4px 9px}
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.tab{background:#fff;border:var(--border);box-shadow:var(--shadow-sm);padding:11px 16px;font-family:var(--disp);font-weight:700;font-size:15px;transition:transform .1s}
+.tab:hover{transform:translate(-1px,-1px)}
+.tab[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.panel{background:#fff;border:var(--border);box-shadow:var(--shadow);padding:26px 28px}
+@media (max-width:520px){.panel{padding:20px}}
+.panel .eyebrow{font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.05em;margin:0 0 6px}
+.panel h3{margin:0 0 12px;font-size:26px}
+.plain{font-size:17px;border-left:5px solid var(--teal);padding-left:16px;margin:0 0 20px}
+.inset{background:var(--paper);border:var(--border-sm);padding:14px 16px;margin:0 0 20px}
+.inset b{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:6px}
+.inset ul{margin:0;padding-left:18px;font-size:15px}
+.inset li{margin-bottom:6px}
+.starter{font-family:var(--mono);font-size:14px;background:#fff;border:var(--border-sm);padding:9px 12px;margin-bottom:8px}
+
+.seg{display:flex;gap:8px;margin-bottom:14px}
+.seg button{flex:1;border:var(--border);background:#fff;padding:10px 6px;font-family:var(--disp);font-weight:700;font-size:14px;text-transform:uppercase}
+.seg button[aria-pressed="true"]:nth-child(1){background:var(--pink);color:#fff}
+.seg button[aria-pressed="true"]:nth-child(2){background:var(--yellow)}
+.seg button[aria-pressed="true"]:nth-child(3){background:var(--teal);color:#fff}
+.seg-out{border:2px dashed var(--ink);padding:18px 20px;font-size:15.5px}
+.seg-out .lab{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:9px;color:var(--orange)}
+.seg-out .txt{font-size:16px;line-height:1.7;margin-bottom:16px}
+.seg-out .verdict{background:var(--paper);border:var(--border-sm);padding:13px 15px;font-size:14.5px}
+.seg-out .verdict b{font-family:var(--disp);font-size:14.5px;display:block;margin-bottom:3px}
+
+.opt{display:block;width:100%;text-align:left;background:var(--paper);border:var(--border-sm);padding:13px 15px;margin-bottom:9px;font-size:15px}
+.opt:hover{border-color:var(--orange)}
+.opt.right{background:var(--teal);color:#fff;border-color:var(--ink)}
+.opt.wrong{background:var(--pink);color:#fff;border-color:var(--ink)}
+.opt:disabled{cursor:default}
+.fb{border:2px dashed var(--ink);padding:14px 16px;font-size:15px;margin:6px 0 14px}
+.fb[hidden]{display:none}
+.fb b{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:5px;color:var(--orange)}
+.qn{font-family:var(--mono);font-size:12px;color:var(--dim);margin:0 0 6px}
+.qq{font-family:var(--disp);font-weight:700;font-size:18px;margin:0 0 16px}
+.quizbox{background:#fff;border:var(--border);box-shadow:var(--shadow);padding:24px 26px;max-width:760px}
+
+.tmpl{background:#fff;border:var(--border);box-shadow:var(--shadow);padding:26px 28px}
+.tmpl .fld{border-bottom:var(--border-sm);padding:14px 0}
+.tmpl .fld:last-child{border-bottom:none}
+.tmpl .fld b{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);display:block;margin-bottom:4px}
+.tmpl .fld span{font-size:14.5px;color:var(--dim)}
+.tmpl .fld .line{border-bottom:1px dotted var(--dim);height:22px;margin-top:8px}
+
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.search{flex:1 1 240px;border:var(--border);background:#fff;padding:12px 14px;font:inherit;box-shadow:var(--shadow-sm)}
+.chip{border:var(--border-sm);background:#fff;padding:7px 12px;font-family:var(--mono);font-size:12px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.count{font-family:var(--mono);font-size:12px;color:var(--dim)}
+.entry{border-bottom:var(--border-sm);padding:14px 0}
+.entry b{font-family:var(--disp);font-weight:700;font-size:17px;display:block}
+.entry .cat{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.entry p{margin:4px 0 0;font-size:15px}
+
+.gl{background:none;border:none;padding:0;color:inherit;font:inherit;border-bottom:2px dotted var(--orange);cursor:help}
+.gl:hover{background:var(--yellow)}
+.pop{position:absolute;z-index:60;max-width:320px;background:var(--ink);color:#EDE9F7;border:var(--border);box-shadow:5px 5px 0 var(--orange);padding:14px 16px;font-size:14px;line-height:1.55}
+.pop[hidden]{display:none}
+.pop b{display:block;font-family:var(--disp);font-weight:700;color:#fff;margin-bottom:4px;font-size:16px}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(140%);z-index:60;background:var(--ink);color:var(--paper);border:var(--border);box-shadow:5px 5px 0 var(--orange);padding:13px 20px;transition:transform .35s cubic-bezier(.2,.8,.3,1);text-align:center}
+.toast.up{transform:translateX(-50%) translateY(0)}
+.toast .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--yellow);text-transform:uppercase}
+.toast .m{font-family:var(--disp);font-weight:700;font-size:17px}
+.sound-btn{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--ink);color:var(--paper);border:var(--border);box-shadow:4px 4px 0 var(--teal);padding:9px 15px;font-family:var(--mono);font-size:12px;text-transform:uppercase}
+
+.site-footer{border-top:var(--border);padding:26px 0 90px;font-size:13.5px;color:var(--soft)}
+.site-footer p{margin:0 0 7px;max-width:74ch}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  body{background:#fff}
+  .nav,.sound-btn,.toast,.pop,.titlescreen,.tools,.tabs,.seg,.quizbox{display:none}
+  .page[hidden]{display:block!important}
+  .acc-body[hidden]{display:block!important}
+  .card,.acc,.panel,.tmpl,.round,table,.run{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<button class="sound-btn" id="sound" aria-pressed="false">♪ Sound off</button>
+<div class="toast" id="toast"><div class="l">Unlocked</div><div class="m"></div></div>
+<div class="pop" id="pop" hidden role="dialog"></div>
+
+<div class="titlescreen" id="title">
+  <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span>
+  <span class="kicker" id="kicker">Belfast Met · 2026–27 · Day one</span>
+  <h1>Insert<em>Coin</em></h1>
+  <p class="sub">Morning: everything the handbook says, in about eight minutes rather than twenty pages. Afternoon: three people, one arcade game, and the part nobody warns you about — writing down what you did and why.</p>
+  <button class="btn" id="start">▶ Press start</button>
+</div>
+
+<div id="shell" hidden>
+<nav class="nav"><div class="nav-in">
+  <div class="nav-row">
+    <span class="nav-lab">Morning</span>
+    <button class="nav-btn" data-p="m1">01 Start</button>
+    <button class="nav-btn" data-p="m2">02 Timetable</button>
+    <button class="nav-btn" data-p="m3">03 Rules</button>
+    <button class="nav-btn" data-p="m4">04 Grading</button>
+    <button class="nav-btn" data-p="m5">05 Deadlines</button>
+    <button class="nav-btn" data-p="m6">06 Help</button>
+    <button class="nav-btn" data-p="m7">07 Quiz</button>
+  </div>
+  <div class="nav-row">
+    <span class="nav-lab">Afternoon</span>
+    <button class="nav-btn" data-p="a1">08 Ice breaker</button>
+    <button class="nav-btn" data-p="a2">09 Brief</button>
+    <button class="nav-btn" data-p="a3">10 The log</button>
+    <button class="nav-btn" data-p="a4">11 Criteria</button>
+    <button class="nav-btn" data-p="a5">12 3 ways</button>
+    <button class="nav-btn" data-p="a6">13 Fix it</button>
+    <button class="nav-btn" data-p="a7">14 Template</button>
+    <button class="nav-btn" data-p="gl">15 Glossary</button>
+    <div class="progress"><span id="progtxt">0/15</span><div class="progress-bar"><i></i></div></div>
+  </div>
+</div></nav>
+
+<!-- ============ M1 START ============ -->
+<section class="page" id="m1" hidden><div class="wrap">
+  <span class="tag">01 — Start here</span>
+  <h2>Welcome. Here's the <em>short version</em></h2>
+  <p class="lede">You're at Northern Ireland's largest FE and HE college, on a two-year course that runs September to June. The handbook covers everything. These three numbers cover most of it.</p>
+
+  <div class="card" id="coursefacts"></div>
+
+  <div class="grid3">
+    <div class="card tint-o"><span class="big">90%</span><h4>attendance</h4><p>The minimum expected. Below it and you're into disciplinary territory, whatever your grades look like.</p></div>
+    <div class="card tint-t"><span class="big">1 Nov</span><h4>registration</h4><p>The deadline to be registered with Pearson. Miss it and your qualification is at risk before you've started.</p></div>
+    <div class="card tint-y"><span class="big">15</span><h4>working days</h4><p>How long you wait for feedback after an on-time submission. Late work doesn't get that guarantee.</p></div>
+  </div>
+
+  <h3>Today</h3>
+  <div class="run" id="runofday"></div>
+
+  <h3>Do these five things this week</h3>
+  <ol class="steps">
+    <li><b>Check your college email</b> Daily. Not weekly. It's the College's primary way of contacting you, and "I didn't see the email" is not a defence that has ever worked.</li>
+    <li><b>Install the Student Engage app</b> On the Play Store or App Store. {{ontrack|OnTrack Hub}} pushes messages to it by email, SMS and app notification, including room changes.</li>
+    <li><b>Log into {{canvas|Canvas}}</b> Class materials, handouts and assignment briefs all live there. Do the "Canvas for Students" orientation course — twenty minutes, saves you three questions later.</li>
+    <li><b>Update your contact details</b> If your phone or address changes, tell the curriculum office immediately. The College can only reach you on what it has.</li>
+    <li><b>Read the {{conduct|Student Code of Conduct}}</b> You agreed to it at enrolment. Worth knowing what you signed.</li>
+  </ol>
+
+  <div class="card tint-p">
+    <h4>The one thing students get wrong every year</h4>
+    <p>Every grade you receive during the year is <strong>provisional</strong>. It can go up or down. Nothing is final until it has been through internal verification, Pearson, and the College's Assessment Board. Section 04 explains why — read it before you start arguing about a mark.</p>
+  </div>
+</div></section>
+
+<!-- ============ M2 TIMETABLE ============ -->
+<section class="page" id="m2" hidden><div class="wrap">
+  <span class="tag">02 — Timetable</span>
+  <h2>Where you need to <em>be</em></h2>
+  <p class="lede">Every session is in the same room, so at least there's nothing to get lost looking for. Wednesday and Friday have no scheduled classes — that time is yours, and it isn't a day off.</p>
+
+  <div id="tt"></div>
+
+  <div class="grid2" style="margin-top:22px">
+    <div class="card tint-t">
+      <h4>Your one room</h4>
+      <p><strong>CC-5-G-022</strong>, Castlereagh campus. Ground floor. Everything on your timetable happens here.</p>
+    </div>
+    <div class="card tint-y">
+      <h4>Rooms change. Check the app.</h4>
+      <p>Timetables get amended during the year. The Student Engage app carries the live version, so check it rather than a printout if something looks off.</p>
+    </div>
+  </div>
+
+  <div class="card tint-p">
+    <h4>The gap on Wednesday and Friday isn't free time</h4>
+    <p>It's independent study, and it's the difference between finishing this course comfortably and finishing it in a panic. Reading, research, practice, and getting assignments done before the week they're due. Use one of the two days properly and you'll rarely be in trouble.</p>
+  </div>
+</div></section>
+
+<!-- ============ M3 RULES ============ -->
+<section class="page" id="m3" hidden><div class="wrap">
+  <span class="tag">03 — Consequences</span>
+  <h2>The rules that <em>actually bite</em></h2>
+  <p class="lede">Most policies are common sense and you'll never think about them again. These five are different — they have real consequences and people get caught by them every year. Tap each one.</p>
+  <div id="rules"></div>
+</div></section>
+
+<!-- ============ M4 GRADING ============ -->
+<section class="page" id="m4" hidden><div class="wrap">
+  <span class="tag">04 — Grading</span>
+  <h2>Why your grade isn't <em>your grade yet</em></h2>
+  <p class="lede">You'll be marked Pass, Merit or Distinction on each unit. The mark on your feedback sheet is the start of a process, not the end of one.</p>
+
+  <h3>From your submission to your certificate</h3>
+  <ol class="steps">
+    <li><b>Your tutor assesses it</b> Written feedback within 15 working days, showing what worked and what to improve. This grade is <strong>provisional</strong>.</li>
+    <li><b>{{iv|Internal Verification}}</b> A second tutor reviews a sample of work from each unit to check the grading meets the standard. Grades can change here.</li>
+    <li><b>The {{eqa|EQA}} visits</b> Someone from Pearson — also called a Standards Verifier or Visiting Moderator — checks assessment decisions are fair and meet national standards. Usually March to June, in person or on Teams. They may run a learner focus group, so you might be asked your honest opinion of the course.</li>
+    <li><b>The Assessment Board</b> Reviews grades, extenuating circumstances, misconduct cases and progression. Three a year: Progress Board in January, Awarding Board in June, Supplementary Board in August.</li>
+    <li><b>Ratified</b> Only now is your grade final and your certificate issued.</li>
+  </ol>
+
+  <div class="grid2">
+    <div class="card tint-t">
+      <h4>What this means for you</h4>
+      <p>Don't panic about a single mark, and don't bank on one either. If you think an assessment decision is wrong, raise it early with James rather than waiting for results day — there's an academic appeals process and you'll be told how to use it when you get your results.</p>
+    </div>
+    <div class="card tint-y">
+      <h4>Practice vs graded</h4>
+      <p>Your assessment schedule shows both. Practice assignments exist so you can be bad at something safely and get told how to fix it. Graded assignments count. Know which is which before deciding how much effort to spend.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>Reassessment</h4>
+    <p>If you need to redo something you'll be told, and you'll submit over the summer. The August board confirms those results, usually in time for the {{ucas|UCAS}} deadline if you're applying to higher education.</p>
+  </div>
+</div></section>
+
+<!-- ============ M5 DEADLINES ============ -->
+<section class="page" id="m5" hidden><div class="wrap">
+  <span class="tag">05 — Deadlines</span>
+  <h2>Handing work in, and what to do when <em>you can't</em></h2>
+  <p class="lede">You'll get an assessment schedule within your first two weeks with every deadline on it. Put them all in your phone the day you get it.</p>
+
+  <h3>Every time you submit</h3>
+  <div class="grid2">
+    <div class="card">
+      <h4>Keep your own copy</h4>
+      <p>Electronic, hard copy, or both. Every time. Systems fail and files corrupt, and "it's gone" is your problem, not the College's.</p>
+    </div>
+    <div class="card">
+      <h4>Sign the declaration</h4>
+      <p>You're stating three things: the work is your own, you've referenced your sources, and you've declared any {{ai|AI tools}} you used. A false declaration is {{malpractice|malpractice}}.</p>
+    </div>
+  </div>
+
+  <h3>If something goes genuinely wrong</h3>
+  <div class="card tint-o">
+    <h4>Extenuating circumstances</h4>
+    <p>Serious illness, injury, a sudden crisis — things outside your control that stop you working or attending. These can be authorised, and the process is a form: the {{ec1|EC1}} Extenuating Circumstances form, in Public Documents on the College website.</p>
+    <p><strong>Apply before the deadline, not after it.</strong> An authorised late submission is fine. An unauthorised one gets marked under the College and Pearson's rules, which is a much worse place to be. If you're struggling, tell someone while there's still time to help.</p>
+  </div>
+
+  <div class="card tint-p">
+    <h4>What isn't an extenuating circumstance</h4>
+    <p>Leaving it to the last night. A laptop you didn't back up. Being busy. Genuine crises get support; poor planning doesn't. That distinction is the whole point of the process.</p>
+  </div>
+</div></section>
+
+<!-- ============ M6 HELP ============ -->
+<section class="page" id="m6" hidden><div class="wrap">
+  <span class="tag">06 — Support</span>
+  <h2>Who to ask, in <em>what order</em></h2>
+  <p class="lede">Most problems get solved at the first step. Nobody minds you asking — they mind you not asking until March.</p>
+
+  <ol class="steps">
+    <li><b>James Bell — your course coordinator and personal tutor</b> Anything about your course, your work, a deadline, or something going wrong. On this course both roles are the same person, so this is your first stop for almost everything.</li>
+    <li><b>Any of your lecturers</b> If it's about their session specifically, ask them directly rather than waiting for tutorial.</li>
+    <li><b>Janis Leaden, then Ian McCormick</b> Curriculum Area Manager, then Head of School. For anything the course team can't resolve. You shouldn't need them often, but you're entitled to reach them.</li>
+  </ol>
+
+  <h3>Your course team</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Role</th><th>Name</th><th>Email</th></tr></thead>
+    <tbody id="contacts"></tbody>
+  </table></div>
+
+  <h3>Support services</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Service</th><th>What it's for</th><th>Contact</th></tr></thead>
+    <tbody id="services"></tbody>
+  </table></div>
+
+  <div class="card tint-t">
+    <h4>Student counselling — 24/7, all year</h4>
+    <p>Confidential, and available outside term time. Inspire Student Support Hub, helpline <strong>0808 800 0032</strong>, or <a href="https://www.inspiresupporthub.org/students/">inspiresupporthub.org/students</a> using the log-on <strong>BMETHUB</strong>. You don't need permission or a referral, and you don't need to be in crisis to use it.</p>
+  </div>
+
+  <h3>If something goes properly wrong</h3>
+  <div class="card">
+    <h4>Complaints</h4>
+    <p>College complaints first, via the complaints page on the Belfast Met website. If your complaint is about Pearson's own service, go to them directly; otherwise exhaust the College process first. Still unhappy after that, Northern Ireland has an independent ombudsman — {{nipso|NIPSO}} — at nipso.org.uk.</p>
+  </div>
+
+  <div class="card tint-y">
+    <h4>Thinking of leaving?</h4>
+    <p>Talk to James first — book a time and say what's wrong. There may be a fix you haven't thought of. And know the financial side before deciding: withdrawing can make you liable for the full year's fees, including anything paid by the Student Loans Company. If you do withdraw, tell both the College and the SLC quickly to avoid an overpayment you'll have to repay.</p>
+  </div>
+</div></section>
+
+<!-- ============ M7 QUIZ ============ -->
+<section class="page" id="m7" hidden><div class="wrap">
+  <span class="tag">07 — Boss fight</span>
+  <h2>Did any of that <em>go in?</em></h2>
+  <p class="lede">Seven questions on the things that actually cost people marks. No pass mark, no record kept — it's just to find out what you'd have got wrong.</p>
+  <div class="quizbox" id="hquiz"></div>
+</div></section>
+
+<!-- ============ A1 ICE BREAKER ============ -->
+<section class="page" id="a1" hidden><div class="wrap">
+  <span class="tag pm">08 — Ice breaker</span>
+  <h2>Three coins</h2>
+  <p class="lede">Twenty minutes. By the end you'll be in a group of three, and that group will already have everything it needs to start designing. Nothing here is thrown away — it all feeds the task.</p>
+
+  <div id="rounds"></div>
+
+  <div class="card tint-t">
+    <h4>Why we did it this way</h4>
+    <p>Most ice breakers waste the material they generate. This one doesn't. The nine slips on your table are nine starting points, and the argument you had in round four is the first design discussion of your course. Keep the notes — they're the first thing you'll write about in your log at the end of today.</p>
+  </div>
+</div></section>
+
+<!-- ============ A2 BRIEF ============ -->
+<section class="page" id="a2" hidden><div class="wrap">
+  <span class="tag pm">09 — The brief</span>
+  <h2>Build an <em>arcade game</em></h2>
+  <p class="lede">In your group of three, design and prototype an original arcade game with a retro style, then present it. You'll build a playable version using Gear Zero, and you'll keep a reflective log while you do it.</p>
+
+  <div class="grid3">
+    <div class="card tint-o"><span class="big">3</span><h4>people</h4><p>Threes where the numbers allow. Three is the size where everyone has a job and nobody hides. If the register doesn't divide neatly, one group of four is fine — that group splits the driver's job in two.</p></div>
+    <div class="card tint-t"><span class="big">1</span><h4>screen</h4><p>Real arcade games fit on one screen with no scrolling story and no tutorial. That constraint is the point.</p></div>
+    <div class="card tint-y"><span class="big">30</span><h4>seconds</h4><p>How long a stranger should need to understand your game. If it takes longer, it isn't an arcade game yet.</p></div>
+  </div>
+
+  <h3>What "arcade" actually means</h3>
+  <div class="card">
+    <p>Arcade games were built to take a coin off you in a noisy room, from someone who had never seen the machine before. That produced a very specific set of design rules, and they're still some of the best design rules there are:</p>
+    <ul>
+      <li><strong>One {{mechanic|core mechanic}}.</strong> Jump. Shoot. Rotate. Catch. One verb, done extremely well.</li>
+      <li><strong>Readable in a glance.</strong> You can tell what's dangerous, what's you, and what you want, without reading anything.</li>
+      <li><strong>Instant start.</strong> No menus to fight through, no cutscene, no tutorial. You're playing within five seconds.</li>
+      <li><strong>Difficulty that climbs.</strong> The first thirty seconds are easy on purpose. It gets harder until it kills you.</li>
+      <li><strong>A score, and a reason to beat it.</strong> The loop is "again", and "again" has to feel like your fault, not the game's.</li>
+      <li><strong>Short sessions.</strong> A run lasts a couple of minutes. Losing has to be quick enough that trying again is easier than walking away.</li>
+    </ul>
+  </div>
+
+  <div class="card tint-p">
+    <h4>Retro style is a decision, not a filter</h4>
+    <p>"Retro" isn't just pixel art because pixel art is easier. Pick a specific era and commit to it — the four-colour blockiness of early home computers, the black background and vector lines of an early cabinet, the chunky sprites and loud palettes of the mid-eighties, the pre-rendered look of the mid-nineties. Then be able to say <em>why</em> that era suits your game. That sentence is worth marks.</p>
+  </div>
+
+  <h3>How to run it</h3>
+  <ol class="steps orange">
+    <li><b>Pick your two slips</b> From the nine on your table you've already chosen two that can live in the same game. Those are your seed. Write down why they work together.</li>
+    <li><b>Write the one-sentence pitch</b> Your whole game in a single sentence a stranger would understand. If you can't, the idea isn't clear enough yet. Rewrite it until you can.</li>
+    <li><b>Describe it to {{gearzero|Gear Zero}}</b> Type your pitch in plain words and let it build. You'll be playing something in minutes. It won't be right first time — that's the useful part.</li>
+    <li><b>Iterate out loud</b> Keep talking to it. Change one thing at a time so you can tell what each change did. <strong>Screenshot every version.</strong> Every prompt you write is a design decision and every rebuild is a result — that's your log entry writing itself.</li>
+    <li><b>Decide what you're keeping</b> At some point stop changing things and defend what you've got. Knowing when to stop is a skill nobody teaches and everybody needs.</li>
+    <li><b>Present it</b> Three minutes per group. Short enough that you have to know what matters about your own game.</li>
+  </ol>
+
+  <h3>The presentation</h3>
+  <div class="grid2">
+    <div class="card">
+      <h4>Cover these five things</h4>
+      <ol style="margin:0;padding-left:18px">
+        <li>Your one-sentence pitch</li>
+        <li>The era you chose and why it fits</li>
+        <li>The core mechanic, demonstrated live</li>
+        <li>One thing that changed between your first version and your last, and what made you change it</li>
+        <li>What you'd do next if you had another week</li>
+      </ol>
+    </div>
+    <div class="card tint-y">
+      <h4>Point four is the one that matters</h4>
+      <p>Anyone can show a finished thing. Showing what you changed and why is the difference between describing and reflecting — and it's the same skill your log is marked on. Groups who skip it will be asked about it anyway.</p>
+    </div>
+  </div>
+
+  <h3>Splitting the work</h3>
+  <div class="card">
+    <p>Three people, three jobs. Rotate them if you want, but agree who has which before you start — and put that in your log, because "we all just did a bit of everything" is where team projects go to die.</p>
+    <ul>
+      <li><strong>Driver</strong> — types the prompts, keeps the build moving, saves the versions.</li>
+      <li><strong>Designer</strong> — holds the vision, decides what's in and what's out, defends the core mechanic when someone wants to bolt something on.</li>
+      <li><strong>Recorder</strong> — screenshots each version, notes what changed and why, keeps the material the whole group needs for their logs.</li>
+    </ul>
+  </div>
+
+  <div class="card tint-o">
+    <h4>Declare your AI use — this is a rehearsal for the real thing</h4>
+    <p>You're using an AI tool to build this, openly and deliberately. That's fine. What matters is that you <em>say so</em>, and say what you did with it: what you asked for, what came back, what you changed, what you rejected. Every piece of assessed work you submit carries a declaration covering {{ai|AI use}}, and this task is a low-stakes run at getting that habit right. The College's AI guidance applies from today, not from your first graded assignment.</p>
+  </div>
+</div></section>
+
+<!-- ============ A3 THE LOG ============ -->
+<section class="page" id="a3" hidden><div class="wrap">
+  <span class="tag pm">10 — Reflective log</span>
+  <h2>What a reflective log <em>actually is</em></h2>
+  <p class="lede">You'll write one every day for two years. Most people write it badly for the first six months, then work out what it's for and wish they'd started properly. This page is an attempt to save you those six months.</p>
+
+  <div class="grid2">
+    <div class="card tint-p">
+      <h4>It is not a diary</h4>
+      <p>Nobody wants to know how you felt about Tuesday. "Today was good, we got a lot done" is worth exactly nothing.</p>
+    </div>
+    <div class="card tint-p">
+      <h4>It is not a to-do list</h4>
+      <p>A list of what happened, in order, is a register. It records that you were present. It doesn't record that you were thinking.</p>
+    </div>
+  </div>
+
+  <div class="card tint-t">
+    <h4>It is a record of your decisions and what they cost you</h4>
+    <p>Every day you make choices — which idea to chase, which tool to use, what to cut, who does what, when to stop. A reflective log captures those choices while you still remember why you made them, along with what happened as a result and what you'd do differently. That's it. That's the whole thing.</p>
+  </div>
+
+  <h3>Why you're actually being asked to do it</h3>
+  <ol class="steps">
+    <li><b>Because it's the evidence</b> Your finished game shows what you made. It cannot show why you made it, what you rejected, or what you fixed. The log is the only place that exists. Without it, two of the five assessment criteria have nothing to mark.</li>
+    <li><b>Because you will not remember</b> In May, assembling a portfolio, you will not remember why you changed the enemy speed in October. Everyone believes they will. Nobody does.</li>
+    <li><b>Because the grade descriptors are written about it</b> The difference between a Pass and a Distinction is largely the difference between doing something and being able to explain the thinking behind it. That explanation lives in your log.</li>
+    <li><b>Because it's a real industry habit</b> Devlogs, {{postmortem|post-mortems}}, design documentation, commit messages, sprint retrospectives. Studios run on written reflection. You're not learning a college ritual, you're learning the job.</li>
+  </ol>
+
+  <h3>The rule that fixes most bad logs</h3>
+  <div class="card tint-y">
+    <h4>Never write what you did without writing why</h4>
+    <p style="font-size:17px">Every sentence about an action needs a sentence about the thinking. If you've written <em>"we changed the background to black"</em>, you're not finished until you've written <em>"because the sprites were getting lost against the blue and you couldn't tell what was dangerous"</em>.</p>
+    <p>Read your entry back. If you can add <strong>"so what?"</strong> after a sentence and there's no answer, that sentence isn't doing anything.</p>
+  </div>
+
+  <h3>Three sentences, minimum, every time</h3>
+  <div class="grid3">
+    <div class="card"><h4>1. What I did</h4><p>Specific. Not "worked on the game" — which part, using what, for how long.</p></div>
+    <div class="card"><h4>2. Why I did it that way</h4><p>What were the options? Why this one? What did you rule out and on what grounds?</p></div>
+    <div class="card"><h4>3. What happened, and what next</h4><p>Did it work? How do you know? What's the next move because of it?</p></div>
+  </div>
+
+  <div class="card tint-o">
+    <h4>Write it in the last ten minutes of class</h4>
+    <p>Not on Sunday night for the whole week. A log written from memory five days later is vague, because your memory is vague — and vague is exactly what loses marks. Ten minutes at the end of each session, while you can still remember what annoyed you, beats an hour at the weekend every single time.</p>
+  </div>
+
+  <div class="card tint-p">
+    <h4>You're reading this before you build, on purpose</h4>
+    <p>Normally you'd learn this after the fact and spend the last ten minutes trying to remember what happened. Today you know first — so capture as you go. Keep a scrap of paper or an open document next to you and write one line every time you change something: what you changed, and why you changed it. Ten scribbled lines at 15:20 turn into a strong entry at 15:45. Nothing at 15:20 turns into "we made a game and it was good".</p>
+  </div>
+</div></section>
+
+<!-- ============ A4 CRITERIA ============ -->
+<section class="page" id="a4" hidden><div class="wrap">
+  <span class="tag pm">11 — Assessment criteria</span>
+  <h2>What your log needs to show for <em>each criterion</em></h2>
+  <p class="lede">Your whole course is marked against the same five criteria. Your log can feed all five — but only if you know what each one is looking for. Pick a criterion, read what it wants, and steal the sentence starters.</p>
+  <div class="tabs" id="actabs"></div>
+  <div class="panel" id="acbox"></div>
+</div></section>
+
+<!-- ============ A5 THREE WAYS ============ -->
+<section class="page" id="a5" hidden><div class="wrap">
+  <span class="tag pm">12 — Worked example</span>
+  <h2>The same day, written <em>three ways</em></h2>
+  <p class="lede">One session on the arcade task: the group's first Gear Zero build came back wrong. Here's how three different students would write it up. Same day, same events, wildly different marks.</p>
+  <div class="seg" id="seg"></div>
+  <div class="seg-out" id="segout"></div>
+
+  <div class="card tint-t" style="margin-top:22px">
+    <h4>What changed between them</h4>
+    <p>Not the amount of work. Not the quality of the game. All three students did exactly the same things that afternoon. The difference is entirely in whether they wrote down the thinking that was already in their head — and that thinking is free. You did it anyway. You just have to put it on the page.</p>
+  </div>
+</div></section>
+
+<!-- ============ A6 FIX IT ============ -->
+<section class="page" id="a6" hidden><div class="wrap">
+  <span class="tag pm">13 — Practice</span>
+  <h2>Fix the <em>sentence</em></h2>
+  <p class="lede">Six real sentences from real logs. Pick the stronger rewrite. The explanations are the useful bit, so read them even when you get it right.</p>
+  <div class="quizbox" id="fquiz"></div>
+</div></section>
+
+<!-- ============ A7 TEMPLATE ============ -->
+<section class="page" id="a7" hidden><div class="wrap">
+  <span class="tag pm">14 — Template</span>
+  <h2>Use this until you <em>don't need it</em></h2>
+  <p class="lede">Print it, or copy the headings into your own document. After a few weeks you'll stop needing the prompts — but use them until then, because a scaffolded entry beats a blank page every time.</p>
+
+  <div class="tmpl">
+    <div class="fld"><b>Date and session</b><span>Which class, and roughly how long you worked.</span><div class="line"></div></div>
+    <div class="fld"><b>What I did</b><span>Specific. Which part of the work, using what tool, and what my job was in the group today.</span><div class="line"></div><div class="line"></div></div>
+    <div class="fld"><b>Why I did it that way</b><span>What were the alternatives? Why this one? What did I rule out, and on what grounds?</span><div class="line"></div><div class="line"></div></div>
+    <div class="fld"><b>What I looked at first</b><span>Any game, video, article or example that informed the decision — and what I actually took from it. <em>Feeds AC1.</em></span><div class="line"></div></div>
+    <div class="fld"><b>What went wrong, and what I did about it</b><span>The problem, the options, the fix, and whether the fix worked. <em>Feeds AC2.</em></span><div class="line"></div><div class="line"></div></div>
+    <div class="fld"><b>Technical decisions</b><span>Specific settings, tools, prompts, values. What effect did the choice have on the person playing? <em>Feeds AC3.</em></span><div class="line"></div></div>
+    <div class="fld"><b>How I worked</b><span>Deadlines, organisation, what I committed to and whether I delivered it. How the group worked today. <em>Feeds AC4.</em></span><div class="line"></div></div>
+    <div class="fld"><b>How I communicated it</b><span>What I explained to whom, how it landed, what I'd say differently. <em>Feeds AC5.</em></span><div class="line"></div></div>
+    <div class="fld"><b>Feedback I was given</b><span>Who said it, what it was, and what I'm going to do about it. Then next entry: say whether you did.</span><div class="line"></div></div>
+    <div class="fld"><b>Next session I will</b><span>One specific thing. Not "keep working on the game".</span><div class="line"></div></div>
+    <div class="fld"><b>Evidence attached</b><span>Screenshots, version numbers, prompts used, files. Name them so you can find them in May.</span><div class="line"></div></div>
+  </div>
+
+  <div class="card tint-y" style="margin-top:20px">
+    <h4>You don't have to hit all five criteria every day</h4>
+    <p>Some days are all technical work and nothing else. That's fine — write that day properly rather than inventing a communication paragraph. Across a fortnight, though, all five should appear. If one of them never does, that's a real gap in how you're working, not just a gap in your writing.</p>
+  </div>
+
+  <p style="margin-top:18px"><button class="btn btn-sm" onclick="window.print()">Print this template</button></p>
+</div></section>
+
+<!-- ============ GLOSSARY ============ -->
+<section class="page" id="gl" hidden><div class="wrap">
+  <span class="tag">15 — Glossary</span>
+  <h2>Every word from <em>today</em></h2>
+  <p class="lede">College jargon, assessment jargon and the terms from the task. If a word confuses you in a brief, a policy or a job advert, it should be here.</p>
+  <div class="tools">
+    <input id="search" class="search" type="search" placeholder="Search a term…" aria-label="Search glossary">
+    <button class="chip" data-c="all" aria-pressed="true">All</button>
+    <button class="chip" data-c="systems" aria-pressed="false">Systems</button>
+    <button class="chip" data-c="assessment" aria-pressed="false">Assessment</button>
+    <button class="chip" data-c="rules" aria-pressed="false">Rules</button>
+    <button class="chip" data-c="people" aria-pressed="false">People</button>
+    <button class="chip" data-c="task" aria-pressed="false">The task</button>
+  </div>
+  <p class="count" id="count"></p>
+  <div id="glist"></div>
+</div></section>
+
+<footer class="site-footer"><div class="wrap">
+  <p>Day one for the BTEC Level 3 National Extended Diploma in Creative Media Practice (Game Development) at Belfast Met. A student-friendly summary of the programme handbook, plus Task 01. It's a summary, not the policy — where the two differ, the handbook and the College's published policies are what count.</p>
+  <p>Full policies are in the Public Documents section of belfastmet.ac.uk. Gear Zero is an external tool at zero.alayalab.ai; any AI use in assessed work must be declared in line with the College's AI guidance.</p>
+</div></footer>
+</div>
+
+<script>
+/* =============================================================
+   EDIT HERE — course details and the shape of the day.
+   ============================================================= */
+var COURSE = {
+  title:        "Creative Media Practice (Game Development)",
+  qualification:"Pearson BTEC Level 3 National Extended Diploma in Creative Media Practice",
+  qan:          "603/4665/6",
+  courseCode:   "P00175-AE (26/28)",
+  awardingBody: "Pearson",
+  campus:       "Castlereagh",
+  mode:         "Full time, 2 years",
+  startDate:    "7 September 2026",
+  canvasLink:   "",            // paste your Canvas page URL
+  teamsLink:    "",            // paste your Teams page URL
+  contacts: [
+    ["Course coordinator &amp; personal tutor", "James Bell",    "JBell@belfastmet.ac.uk"],
+    ["Curriculum Area Manager",                 "Janis Leaden",  "JLeaden@belfastmet.ac.uk"],
+    ["Head of School",                          "Ian McCormick", "IanMcCormick@belfastmet.ac.uk"]
+  ]
+};
+
+var RUNOFDAY = [
+  ["10:00", "Welcome and the handbook",   "Sections 01–02. Course details, the three numbers, your timetable."],
+  ["10:30", "Rules, grading, deadlines",  "Sections 03–05. The parts with consequences."],
+  ["11:15", "Support and who to ask",     "Section 06. Then the quiz — section 07."],
+  ["12:00", "Lunch",                      "", true],
+  ["13:00", "Three coins",                "Section 08. Ice breaker, and you leave it in a group of three."],
+  ["13:25", "The brief",                  "Section 09. What arcade means, pick your seed, write the pitch."],
+  ["13:40", "The reflective log",         "Sections 10–13. Before you build, not after — so you know what to capture while you're doing it."],
+  ["14:20", "Build it",                   "Gear Zero. Change one thing at a time, screenshot every version, note why you changed it."],
+  ["15:20", "Present",                    "Three minutes per group. Point four is the one that matters."],
+  ["15:45", "Write today's entry",        "Section 14 has the template. Fifteen minutes, from the notes you took as you went."],
+  ["16:00", "End",                        "", true]
+];
+
+/* TIMETABLE — day, tutor, room, weeks and dates are exact.
+   TIMES ARE ESTIMATED from the printed grid — check them. */
+var TIMETABLE=[
+ {day:"Monday", slots:[
+   {time:"9:00 – 13:00",  code:"26-1",  title:"Skills Development", tutor:"Mr J Bell",    room:"CC-5-G-022", weeks:"Weeks 3–8, 10–17, 20–21", dates:"14 Sep 2026 – 18 Jan 2027"},
+   {time:"13:45 – 17:00", code:"26-3",  title:"Skills Development", tutor:"Mr J Bell",    room:"CC-5-G-022", weeks:"Weeks 3–8, 10–17, 20–21", dates:"14 Sep 2026 – 18 Jan 2027"}
+ ]},
+ {day:"Tuesday", slots:[
+   {time:"9:00 – 13:00",  code:"26-5",  title:"Skills Development", tutor:"Mr M Bradley", room:"CC-5-G-022", weeks:"Weeks 3–8, 10–17, 20–21", dates:"15 Sep 2026 – 19 Jan 2027"}
+ ]},
+ {day:"Wednesday", slots:[], note:"No scheduled classes. Independent study."},
+ {day:"Thursday", slots:[
+   {time:"9:00 – 12:00",  code:"26-7",  title:"Skills Development", tutor:"Mr J Bell",    room:"CC-5-G-022", weeks:"Weeks 3–8, 10–16, 19–21", dates:"17 Sep 2026 – 21 Jan 2027"},
+   {time:"12:00 – 13:00", code:"26-8",  title:"Tutorial",           tutor:"Mr J Bell",    room:"CC-5-G-022", weeks:"Weeks 3–8, 10–16, 19–23, 25–29, 32–40", dates:"17 Sep 2026 – 3 Jun 2027", flag:true},
+   {time:"13:45 – 17:00", code:"26-10", title:"Skills Development", tutor:"Mr W McBriar", room:"CC-5-G-022", weeks:"Weeks 3–8, 10–16, 19–21", dates:"17 Sep 2026 – 21 Jan 2027"}
+ ]},
+ {day:"Friday", slots:[], note:"No scheduled classes. Independent study."}
+];
+/* ============================================================= */
+
+var $=function(i){return document.getElementById(i);};
+
+/* ---------- audio ---------- */
+var Snd={ctx:null,on:false,mus:null,timer:null,
+ boot:function(){if(this.ctx)return;var C=window.AudioContext||window.webkitAudioContext;if(!C)return;
+  this.ctx=new C();this.mus=this.ctx.createGain();this.mus.gain.value=.12;this.mus.connect(this.ctx.destination);},
+ hz:function(n){return 440*Math.pow(2,(n-69)/12);},
+ note:function(n,at,dur,type,vol,dest){if(!this.on||!this.ctx)return;
+  var o=this.ctx.createOscillator(),g=this.ctx.createGain();
+  o.type=type||"square";o.frequency.value=this.hz(n);
+  g.gain.setValueAtTime(0,at);g.gain.linearRampToValueAtTime(vol,at+.01);
+  g.gain.exponentialRampToValueAtTime(.0001,at+dur);
+  o.connect(g);g.connect(dest||this.ctx.destination);o.start(at);o.stop(at+dur+.05);},
+ fx:function(k){if(!this.on||!this.ctx)return;var t=this.ctx.currentTime;
+  var bank={blip:[[81,0,.05,"square",.12]],move:[[74,0,.04,"square",.10]],
+   coin:[[88,0,.06,"square",.13],[95,.06,.14,"square",.11]],
+   open:[[69,0,.05,"triangle",.13],[76,.05,.08,"triangle",.11]],
+   right:[[76,0,.07,"square",.12],[83,.07,.14,"square",.11]],
+   wrong:[[52,0,.14,"sawtooth",.14],[47,.10,.20,"sawtooth",.12]],
+   unlock:[[72,0,.08,"square",.13],[76,.08,.08,"square",.13],[79,.16,.08,"square",.13],[84,.24,.28,"square",.14],[60,.24,.34,"triangle",.11]],
+   done:[[72,0,.1,"square",.14],[76,.1,.1,"square",.14],[79,.2,.1,"square",.14],[84,.3,.1,"square",.14],[88,.4,.45,"square",.15],[48,.4,.5,"triangle",.12]]};
+  var s=bank[k]||[];for(var i=0;i<s.length;i++){var n=s[i];this.note(n[0],t+n[1],n[2],n[3],n[4]);}},
+ loop:function(){if(!this.on||!this.ctx)return;var self=this,b=.32,t0=this.ctx.currentTime+.05;
+  var bars=[[50,[62,66,69]],[57,[64,69,73]],[55,[67,71,74]],[52,[64,67,71]]];
+  bars.forEach(function(ch,i){var s=t0+i*b*8;
+   for(var k=0;k<8;k+=2) self.note(ch[0]-12,s+k*b,b*1.35,"triangle",.15,self.mus);
+   var arp=[ch[1][0],ch[1][2],ch[1][1],ch[1][2],ch[1][0]+12,ch[1][2],ch[1][1],ch[1][0]];
+   arp.forEach(function(n,j){self.note(n,s+j*b,.19,"square",.05,self.mus);});});
+  this.timer=setTimeout(function(){self.loop();},4*8*b*1000);},
+ toggle:function(){this.boot();if(!this.ctx)return false;
+  if(this.ctx.state==="suspended")this.ctx.resume();
+  this.on=!this.on;if(this.on){this.loop();this.fx("coin");}else{clearTimeout(this.timer);}
+  return this.on;}};
+$("sound").addEventListener("click",function(){var on=Snd.toggle();
+  this.textContent=on?"♪ Sound on":"♪ Sound off";this.setAttribute("aria-pressed",String(on));});
+
+/* ---------- toast ---------- */
+var tt;
+function toast(m,l){var t=$("toast");t.querySelector(".m").textContent=m;
+  t.querySelector(".l").textContent=l||"Unlocked";t.classList.add("up");
+  clearTimeout(tt);tt=setTimeout(function(){t.classList.remove("up");},2600);}
+
+/* ---------- glossary data ---------- */
+var TERMS={
+ canvas:["Canvas","systems","The College's virtual learning environment. Class materials, handouts, assignment briefs and submissions all live here. There's a free 'Canvas for Students' orientation course inside it, plus a built-in Help function."],
+ ontrack:["OnTrack Hub","systems","The platform staff use to contact students — email, SMS, or push notification through the Student Engage app. Install the app; it's free on both stores."],
+ engage:["Student Engage app","systems","The College app. Notifications, and up-to-date room information for your timetable, which changes more often than you'd think."],
+ turnitin:["Turnitin","systems","Software that checks submitted work for originality and correct referencing. It runs on anything submitted through Canvas. Ask how to use it before you submit rather than finding out afterwards."],
+ ebs:["EBS Markbook","systems","One of the systems where your recorded progress and grades can be viewed."],
+
+ provisional:["Provisional grade","assessment","Any grade you get during the year. Not final, and it can change — up or down. Don't make plans on it."],
+ ratified:["Ratified","assessment","Confirmed and made final by the College's Assessment Board. Only ratified grades count."],
+ iv:["Internal Verification","assessment","A second tutor reviews a sample of marked work from each unit to check grading meets the standard. Standard practice, not a sign anything is wrong."],
+ im:["Internal Moderation","assessment","Same idea as internal verification — checking marking is consistent and to standard across a course."],
+ eqa:["EQA","assessment","External Quality Assurer. Appointed by Pearson to check assessment decisions are fair and meet national standards. Also called a Visiting Moderator or Standards Verifier. Usually visits March to June and may run a learner focus group."],
+ sv:["Standards Verifier","assessment","Another name for the EQA. Pearson tends to use this one."],
+ board:["Assessment Board","assessment","The meeting that reviews unit grades, extenuating circumstances, misconduct, progression and awards. Three a year: Progress (January), Awarding (June), Supplementary (August)."],
+ formative:["Practice assignment","assessment","Work set so you can attempt something, get feedback and improve before it counts. Sometimes called formative assessment."],
+ summative:["Graded assignment","assessment","Work that counts towards your qualification. Sometimes called summative assessment."],
+ pmd:["Pass, Merit, Distinction","assessment","How each unit is graded. Combined across units they produce your final grade — strings like MMP, DDM or D*DD. Level 3 diplomas also carry UCAS tariff points."],
+ ucas:["UCAS points","assessment","A numerical value assigned to your qualifications, used by universities to set entry requirements. Check what your target course actually asks for."],
+ internal:["Internal assessment","assessment","Set and marked by the College — assignments, practicals, projects."],
+ external:["External assessment","assessment","Set and marked by Pearson itself. Marked outside the College."],
+ appeal:["Academic appeal","assessment","The formal route for challenging an outcome. You'll be told how to use it when you get your results; guidelines are in Public Documents."],
+ reassessment:["Reassessment","assessment","Redoing a piece of work. Usually submitted over the summer and confirmed by the August board."],
+ reflective:["Reflective writing","assessment","Writing that explains your thinking, not just your actions. The test: could a reader work out why you made a choice, and what you'd do differently?"],
+
+ ec1:["EC1 / Extenuating Circumstances","rules","The form and procedure for getting a late submission authorised when something outside your control stops you working. Apply before the deadline. In Public Documents on the College website."],
+ late:["Late submission","rules","Handing work in after the agreed deadline. Authorised is fine. Unauthorised is marked under College and Pearson regulations, which is much worse."],
+ malpractice:["Academic malpractice","rules","Cheating, collusion, false declarations, or any attempt to gain unfair academic advantage. Consequences can include losing the right to resubmit, which can stop you completing the qualification."],
+ plagiarism:["Plagiarism","rules","Using someone else's ideas, words, data or creative work without acknowledging it — including copying another student, and reusing your own previous work without referencing it."],
+ collusion:["Collusion","rules","Working together on something meant to be individual, then submitting it as your own. Both people are in trouble, not just the one who copied."],
+ declaration:["Awarding body declaration","rules","The statement you sign when submitting: the work is yours, sources are referenced, and any AI use is declared. Signing it falsely is malpractice."],
+ ai:["AI guidance","rules","AI can be a legitimate tool used correctly, and the College has published guidance on what's allowed. You must declare any AI used in submitted work. If unsure whether something's permitted, ask before you submit."],
+ conduct:["Student Code of Conduct","rules","The behaviour standards you agreed to at enrolment — in class, online, and in how you communicate. Includes digital etiquette."],
+ attendance:["Attendance policy","rules","At least 90% of classes. Tell your tutor in advance if you can't make it. Persistent absence or lateness can lead to disciplinary action."],
+ registration:["Registration deadline","rules","You must be registered with Pearson by 1 November of the year you start, or within six weeks if your course allows joining at any time."],
+ peep:["PEEP","rules","Personal Evacuation Emergency Plan. If you'd need help evacuating a building, this is the plan that makes sure someone knows."],
+ iaup:["IT Acceptable Usage Policy","rules","The rules for using College IT systems and accounts. In Public Documents."],
+ gdpr:["GDPR / Data Protection","rules","The law governing how the College handles your personal information. The Privacy Notice explains what's collected, who it's shared with and how long it's kept."],
+
+ cam:["Curriculum Area Manager (CAM)","people","Manages all programmes in a curriculum area. On this course, Janis Leaden. Your escalation point above the course coordinator."],
+ coordinator:["Course coordinator","people","Responsible for the day-to-day running of your programme. On this course, James Bell — who is also your personal tutor."],
+ tutor:["Personal tutor","people","Assigned to you each year for academic guidance and support. Sometimes called an Advisor of Study."],
+ hos:["Head of School","people","Responsible for all programmes across the school. On this course, Ian McCormick."],
+ bsu:["Business Support Unit (BSU)","people","School support team. Handles administrative queries."],
+ nipso:["NIPSO","people","Northern Ireland Public Service Ombudsman. Independent, and the final step if you've exhausted the College's complaints process and are still unhappy."],
+ su:["Students' Union","people","Represents students, runs activities, and can help you talk through a policy or a problem. studentsunion@belfastmet.ac.uk"],
+ essential:["Essential Skills","people","Literacy and numeracy qualifications taken alongside your course if you don't have GCSE grade C or above in English or Maths. Some universities only accept GCSEs — check before relying on them."],
+
+ gearzero:["Gear Zero","task","A browser tool where you describe a game in plain words and it builds a playable version in minutes — then keeps changing it as you keep talking. No code, no install. zero.alayalab.ai"],
+ mechanic:["Core mechanic","task","The one thing the player actually does, over and over. Jumping. Shooting. Rotating a block. Arcade games have exactly one, and everything else serves it."],
+ iteration:["Iteration","task","Making a version, judging it, making a better one. In Gear Zero this happens in minutes, which means you can do more of it — and evidence more of it."],
+ postmortem:["Post-mortem","task","A written breakdown a studio publishes after a game ships: what went right, what went wrong, what they'd do differently. A reflective log is the same thing in smaller pieces, as you go."],
+ pitch:["One-sentence pitch","task","Your whole game in a single sentence a stranger would understand. If you can't write it, the idea isn't clear enough yet."],
+ playtest:["Playtest","task","Watching a real person play your game and recording what breaks or confuses them. Not the same as asking a friend whether they liked it."]
+};
+function gloss(h){return String(h).replace(/\{\{(\w+)\|(.*?)\}\}/g,function(m,k,t){
+  return TERMS[k]?'<button class="gl" data-t="'+k+'">'+t+'</button>':t;});}
+
+var popOpen=null;
+function closePop(){$("pop").hidden=true;popOpen=null;}
+document.addEventListener("click",function(e){
+  var b=e.target.closest(".gl");
+  if(!b){if(!e.target.closest("#pop"))closePop();return;}
+  e.preventDefault();e.stopPropagation();
+  if(popOpen===b){closePop();return;}
+  var t=TERMS[b.dataset.t],p=$("pop");
+  p.innerHTML="<b>"+t[0]+"</b>"+t[2];p.hidden=false;
+  var r=b.getBoundingClientRect(),w=Math.min(320,window.innerWidth-24),x=r.left+window.scrollX;
+  p.style.width=w+"px";
+  if(x+w>window.innerWidth-12)x=window.innerWidth-w-12;
+  p.style.left=Math.max(12,x)+"px";p.style.top=(r.bottom+window.scrollY+8)+"px";
+  popOpen=b;Snd.fx("open");
+},true);
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closePop();});
+window.addEventListener("scroll",function(){if(popOpen)closePop();},{passive:true});
+
+/* ---------- course facts, contacts, run of day ---------- */
+function renderCourse(){
+  var rows=[
+    ["Qualification", COURSE.qualification],
+    ["Awarding body", COURSE.awardingBody+" — qualification number "+COURSE.qan],
+    ["Course code", COURSE.courseCode],
+    ["Campus", COURSE.campus],
+    ["Mode", COURSE.mode],
+    ["Started", COURSE.startDate]
+  ];
+  var links="";
+  if(COURSE.canvasLink) links+='<p style="margin-top:12px"><a href="'+COURSE.canvasLink+'"><strong>Your Canvas page →</strong></a></p>';
+  if(COURSE.teamsLink)  links+='<p><a href="'+COURSE.teamsLink+'"><strong>Your Teams page →</strong></a></p>';
+  $("coursefacts").innerHTML='<h4>What you\'re actually enrolled on</h4>'+
+    '<div class="tablewrap"><table style="box-shadow:none;margin:0"><tbody>'+
+    rows.map(function(r){return '<tr><td style="width:170px"><strong>'+r[0]+"</strong></td><td>"+r[1]+"</td></tr>";}).join("")+
+    "</tbody></table></div>"+links;
+
+  $("contacts").innerHTML=COURSE.contacts.map(function(p){
+    return "<tr><td><strong>"+p[0]+"</strong></td><td>"+p[1]+'</td><td><a href="mailto:'+p[2]+'">'+p[2]+"</a></td></tr>";
+  }).join("");
+
+  $("runofday").innerHTML=RUNOFDAY.map(function(r){
+    return '<div class="slot'+(r[3]?" brk":"")+'"><span class="t">'+r[0]+'</span><span class="w">'+r[1]+
+      (r[2]?'<span class="d">'+r[2]+"</span>":"")+"</span></div>";
+  }).join("");
+}
+
+/* ---------- timetable ---------- */
+function renderTimetable(){
+  $("tt").innerHTML=TIMETABLE.map(function(d){
+    if(!d.slots.length){
+      return '<div class="card" style="background:#EFEDE4"><h4>'+d.day+'</h4><p style="color:var(--dim)">'+d.note+'</p></div>';
+    }
+    return '<div class="card"><h4>'+d.day+'</h4>'+d.slots.map(function(s){
+      return '<div style="border-top:2px dashed var(--ink);padding:13px 0 3px;margin-top:12px">'+
+        '<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:baseline">'+
+        '<span style="font-family:var(--mono);font-size:14px;background:'+(s.flag?"var(--orange)":"var(--ink)")+
+          ';color:#fff;padding:4px 9px">'+s.time+'</span>'+
+        '<strong style="font-family:var(--disp);font-size:17px">'+s.title+'</strong>'+
+        '<span style="font-family:var(--mono);font-size:11.5px;color:var(--dim)">'+s.code+'</span></div>'+
+        '<p style="margin:7px 0 0;font-size:14.5px">'+s.tutor+" · "+s.room+"<br>"+
+        '<span style="color:var(--dim);font-size:13.5px">'+s.weeks+" · "+s.dates+"</span></p></div>";
+    }).join("")+"</div>";
+  }).join("")+
+  '<div class="card tint-o"><h4>The Thursday tutorial runs all year</h4>'+
+  '<p>Every other block on this timetable finishes in January. The Thursday lunchtime tutorial keeps going to <strong>3 June 2027</strong>. That hour is where progress reviews, target setting and anything going wrong get dealt with — treat it as the most important slot on the sheet, not the smallest one.</p></div>';
+}
+
+/* ---------- rules ---------- */
+var RULES=[
+ {t:"Attendance — 90% minimum",
+  body:"<dt>The rule</dt><dd>You're expected to attend at least 90% of classes. If you can't make it, tell your tutor <em>in advance</em>.</dd>"+
+       "<dt>Why it's enforced</dt><dd>Attendance is the single strongest predictor of whether someone finishes. Staff aren't tracking it to catch you out — they're tracking it because when it drops, something is usually wrong, and they'd rather find out in October than June.</dd>"+
+       "<dt>What happens if you don't</dt><dd>Persistent absence or poor punctuality can lead to disciplinary action under the Student Attendance, Punctuality and Fitness to Study Policy.</dd>"},
+ {t:"Registration by 1 November",
+  body:"<dt>The rule</dt><dd>You must be registered with Pearson by 1 November of the year you start — or within six weeks of joining if your course runs roll-on, roll-off.</dd>"+
+       "<dt>Why it matters</dt><dd>Until you're registered you're not formally on the qualification, whatever work you've done.</dd>"+
+       "<dt>Exam fees</dt><dd>If your course has exams, your first attempt is covered by the registration fee if you're eligible. Retakes you pay for yourself.</dd>"},
+ {t:"Plagiarism, collusion and AI",
+  body:"<dt>The rule</dt><dd>Everything you submit must be your own work, with sources referenced and any {{ai|AI tool}} use declared. You sign a declaration saying exactly that.</dd>"+
+       "<dt>What counts</dt><dd>{{plagiarism|Plagiarism}} includes copying another student, and reusing your own earlier work without referencing it. {{collusion|Collusion}} means working together on something meant to be individual — and both people are in trouble.</dd>"+
+       "<dt>On AI specifically</dt><dd>It's not banned. It's governed. The College has published guidance on what's allowed, {{turnitin|Turnitin}} runs on Canvas submissions, and undeclared use is a false declaration. If you're unsure whether something's permitted, ask <em>before</em> you submit — that conversation is free, the other one isn't.</dd>"+
+       "<dt>What happens if you don't</dt><dd>{{malpractice|Academic malpractice}} is treated seriously by both the College and Pearson. In some cases you lose the right to resubmit, which can stop you completing the qualification altogether.</dd>"},
+ {t:"Deadlines and the EC1 form",
+  body:"<dt>The rule</dt><dd>Submit on time, or get an extension authorised <em>before</em> the deadline using the {{ec1|Extenuating Circumstances}} form.</dd>"+
+       "<dt>What counts as extenuating</dt><dd>Things outside your control — serious illness, injury, a sudden crisis. A broken arm before an exam. Not a laptop you didn't back up.</dd>"+
+       "<dt>What happens if you don't</dt><dd>An unauthorised late submission gets marked under College and Pearson regulations. On-time submission also gets you feedback within 15 working days; late work doesn't carry that guarantee.</dd>"+
+       "<dt>The practical advice</dt><dd>The moment you know you're in trouble, say so. Almost everything is fixable with notice and almost nothing is fixable afterwards.</dd>"},
+ {t:"Code of Conduct — including online",
+  body:"<dt>The rule</dt><dd>You agreed to the {{conduct|Student Code of Conduct}} at enrolment. It covers behaviour in class, behaviour online, digital etiquette, and communicating respectfully.</dd>"+
+       "<dt>The bit people forget</dt><dd>'Online' includes Canvas discussions, Teams, group chats connected to your course, and how you write to staff. A message you'd regret sending is a message you'd regret sending whether or not you were in the room.</dd>"+
+       "<dt>Also covered</dt><dd>The {{iaup|IT Acceptable Usage Policy}} governs College systems and your College account.</dd>"}
+];
+function renderRules(){
+  $("rules").innerHTML=RULES.map(function(r,i){
+    return '<div class="acc"><button class="acc-head" data-a="rb'+i+'" aria-expanded="false">'+
+      '<span class="n">'+(i+1)+'</span><span class="t">'+r.t+'</span><span class="cx">+</span></button>'+
+      '<div class="acc-body" id="rb'+i+'" hidden><dl>'+gloss(r.body)+"</dl></div></div>";
+  }).join("");
+  Array.prototype.forEach.call($("rules").querySelectorAll(".acc-head"),function(b){
+    b.addEventListener("click",function(){
+      var p=$(b.dataset.a),open=!p.hidden;
+      p.hidden=open;b.setAttribute("aria-expanded",String(!open));
+      b.querySelector(".cx").textContent=open?"+":"−";Snd.fx("open");
+    });
+  });
+}
+
+/* ---------- support services ---------- */
+var SERVICES=[
+ ["Student Wellbeing","Health, wellbeing and emotional support. Building resilience.","Centre4wellbeing@belfastmet.ac.uk"],
+ ["Inclusive Learning","Support for disabilities, learning difficulties or medical conditions. Get in touch early — adjustments take time to arrange.","Inclusivelearning@belfastmet.ac.uk"],
+ ["Careers &amp; Employability","Career planning, applications, and what comes after the course.","careers@belfastmet.ac.uk"],
+ ["College Library","Resources, referencing guidance, research skills, subject guides on Canvas.","library@belfastmet.ac.uk"],
+ ["Students' Union &amp; Voice","Representation, activities, and help talking through a policy or problem.","studentsunion@belfastmet.ac.uk"],
+ ["Student Funding","Guidance on funding and financial support for your studies.","studentfunding@belfastmet.ac.uk"],
+ ["Student Counselling","Confidential, 24/7, all year round via Inspire. Helpline 0808 800 0032.","support@inspirewellbeing.org"],
+ ["Safeguarding","Preventing and responding to abuse and harm. Led by the College Designated Safeguarding Team.","safeguarding@belfastmet.ac.uk"],
+ ["General student support","If you're not sure who to ask, start here.","support@belfastmet.ac.uk"]
+];
+function renderServices(){
+  $("services").innerHTML=SERVICES.map(function(s){
+    return "<tr><td><strong>"+s[0]+"</strong></td><td>"+s[1]+'</td><td><a href="mailto:'+s[2]+'">'+s[2]+"</a></td></tr>";
+  }).join("");
+}
+
+/* ---------- handbook quiz ---------- */
+var HQUIZ=[
+ {q:"You're ill and won't make Friday's deadline. When do you apply for extenuating circumstances?",
+  a:["Before the deadline","After the deadline, once you know how late you'll be","You don't need to — illness is automatically accepted"],r:0,
+  fb:"Before. An authorised late submission is fine; an unauthorised one is marked under College and Pearson regulations. The moment you know you're in trouble, start the EC1 process."},
+ {q:"Your tutor gives you a Distinction on unit one in October. Is that your grade?",
+  a:["Yes, it's confirmed","No — it's provisional until the Assessment Board ratifies it","Only if the EQA visits before June"],r:1,
+  fb:"Provisional. It goes through internal verification, Pearson's quality assurance, and the Assessment Board before it's final. It can change in either direction."},
+ {q:"You used AI to help plan an assignment. What do you do?",
+  a:["Nothing — planning isn't submitted work","Declare it, and follow the College's AI guidance","Avoid mentioning it in case it looks bad"],r:1,
+  fb:"Declare it. AI isn't banned, it's governed — you sign a declaration covering AI use, and undeclared use is a false declaration, which is malpractice. If unsure whether something's allowed, ask before submitting."},
+ {q:"You and a friend do a piece of individual work together and hand in similar answers.",
+  a:["Fine — you both did the work","That's collusion, and you're both in trouble","Only the one who copied is at fault"],r:1,
+  fb:"Collusion, and both of you are in it. Working together on something meant to be individual is academic misconduct regardless of who started it."},
+ {q:"Something on the course isn't working. Who do you go to first?",
+  a:["Ian McCormick, Head of School","The Students' Union","James Bell, your course coordinator and personal tutor"],r:2,
+  fb:"Start with James. Most things get solved there, and if he can't help he'll point you at someone who can. Escalate to Janis Leaden and Ian McCormick only if the first step doesn't work."},
+ {q:"How often should you check your college email?",
+  a:["Daily","Weekly","When you're expecting something"],r:0,
+  fb:"Daily. It's the College's primary way of contacting you — deadlines, room changes, cancellations, opportunities. Install the Student Engage app too so OnTrack notifications reach your phone."},
+ {q:"You're thinking about leaving the course. What's the first move?",
+  a:["Just stop attending","Book a time with your course coordinator","Email the Student Loans Company"],r:1,
+  fb:"Talk to James. There may be a fix you haven't considered. And know the financial position first — withdrawing can leave you liable for the full year's fees including anything the SLC has paid."}
+];
+
+/* ---------- ice breaker ---------- */
+var ROUNDS=[
+ {t:"Silent line-up",m:"5 min",
+  b:"<p>Everyone stands up. Without speaking, arrange yourselves in a line by <strong>the year of the first game you remember playing</strong> — earliest at one end, most recent at the other.</p>"+
+    "<p>You can gesture, hold up fingers, mime a console. You cannot talk. When you think the line is right, we check it out loud.</p>"+
+    "<p style='font-family:var(--mono);font-size:14px;color:var(--dim)'>Point: you'll find out fast that this room's experience spans about fifteen years, and that's useful rather than embarrassing.</p>"},
+ {t:"The worst game you love",m:"6 min",
+  b:"<p>Turn to the person next to you in the line. Each of you gets ninety seconds to defend <strong>a game you know is bad and enjoy anyway</strong>.</p>"+
+    "<p>Rules: you have to name what's actually wrong with it, and you have to name the one thing it does so well that you forgive the rest.</p>"+
+    "<p style='font-family:var(--mono);font-size:14px;color:var(--dim)'>Point: that second half — naming the one thing that works — is design analysis. You just did it without being told to, which is why it's easier than you think.</p>"},
+ {t:"Three coins",m:"6 min",
+  b:"<p>Get into <strong>threes</strong> — not with the person you just paired with. Each person writes three things on separate slips:</p>"+
+    "<ul><li><strong>A feeling</strong> you want a player to have. One word or a short phrase. Panic. Smugness. That one-more-go itch.</li>"+
+    "<li><strong>A mistake</strong> you've seen a game make that you refuse to repeat.</li>"+
+    "<li><strong>A mechanic</strong> you'd steal from anything — game, sport, board game, playground.</li></ul>"+
+    "<p>Put all nine slips face up in the middle of the table. Don't discuss them yet.</p>"},
+ {t:"Two minutes of arguing",m:"3 min",
+  b:"<p>Now look at the nine. As a three, pick the <strong>two</strong> that could sit in the same game without fighting each other.</p>"+
+    "<p>You have two minutes and you will not agree. That's fine — arguing about which ideas are compatible is most of what a design meeting is.</p>"+
+    "<p style='font-family:var(--mono);font-size:14px;color:var(--dim)'>Point: those two slips are the seed of your arcade game, and the argument you just had is your first log entry.</p>"}
+];
+function renderRounds(){
+  $("rounds").innerHTML=ROUNDS.map(function(r,i){
+    return '<div class="round"><div class="t"><h4>Round '+(i+1)+" — "+r.t+'</h4><span class="mins">'+r.m+"</span></div>"+r.b+"</div>";
+  }).join("");
+}
+
+/* ---------- five criteria ---------- */
+var ACS=[
+ {n:"AC1",name:"Informing ideas",eyebrow:"Research and understanding",
+  plain:"Did you find things out before deciding, and did what you found actually change what you did?",
+  wants:["What you looked at — a game, a video, an article, another group's work","Why you looked at that particular thing","What you took from it, specifically","What you did differently as a result"],
+  starters:["I looked at ___ because I needed to work out ___","What surprised me about it was ___","I'd assumed ___, but after looking at ___ I changed that to ___","This is why we went with ___ instead of ___"],
+  trap:"Listing what you looked at without saying what you took from it. A bibliography is not research."},
+ {n:"AC2",name:"Problem solving",eyebrow:"Reflection, iteration, feedback",
+  plain:"Something went wrong or you had to choose between options. What did you actually do about it, and did it work?",
+  wants:["The problem, stated precisely","The options you considered — including the ones you rejected","Which you chose and on what grounds","Whether it worked, and how you know","Feedback you were given and what you did with it"],
+  starters:["The problem was ___, which mattered because ___","We could have ___ or ___. We went with ___ because ___","It didn't work — what I'd try next is ___","___ told me ___, so I changed ___"],
+  trap:"Only writing about problems you solved. An honest account of something you couldn't fix, with what you'd try next, scores better than pretending everything went smoothly."},
+ {n:"AC3",name:"Technical skill",eyebrow:"Making things, and knowing what your choices do",
+  plain:"What did you actually build, with what, and do you understand the effect of your technical choices on the person playing?",
+  wants:["The specific tool, setting, prompt or value","Why that one and not another","What it did to the player's experience","What you'd change about it"],
+  starters:["I used ___ to ___, because ___","I changed ___ from ___ to ___ and the effect was ___","This looked right but played badly, because ___","The prompt I gave Gear Zero was ___ and what came back was ___"],
+  trap:"Writing \"I made the game\" instead of \"I set the enemy spawn rate to increase every fifteen seconds so the difficulty climbs without a visible level break\". Specific always beats general."},
+ {n:"AC4",name:"Professional practice",eyebrow:"How you work, not what you make",
+  plain:"Did you organise yourself, meet what you committed to, and work usefully with other people?",
+  wants:["What you agreed to do and whether you did it","How you managed your time","How the group worked — including when it didn't","What you're changing about how you work"],
+  starters:["I said I'd have ___ done by ___. I did / didn't, because ___","We split the work as ___, which worked / didn't because ___","I lost about ___ minutes to ___, so next session I'll ___","Something I need to get better at is ___"],
+  trap:"This is the criterion people forget exists, because it isn't about the game. Write about how you worked, honestly. Saying a session went badly and naming why is worth more than claiming it went fine."},
+ {n:"AC5",name:"Communication",eyebrow:"Getting it across to other people",
+  plain:"Can you explain your work and your reasoning to someone who wasn't there?",
+  wants:["What you explained, to whom","How you explained it — spoken, written, shown","How it landed, and how you could tell","What you'd say differently"],
+  starters:["I explained ___ to ___ by ___","They didn't get ___ at first, so I ___","In the presentation I'd change ___ because ___","The clearest way to describe our game turned out to be ___"],
+  trap:"Assuming this only means presentations. Explaining an idea to your own group counts, and so does the wording you settled on for your pitch."}
+];
+var curAC=0;
+function renderTabs(){
+  $("actabs").innerHTML=ACS.map(function(a,i){
+    return '<button class="tab" data-i="'+i+'" aria-pressed="'+(i===curAC)+'">'+a.n+" · "+a.name+"</button>";}).join("");
+  Array.prototype.forEach.call($("actabs").querySelectorAll(".tab"),function(b){
+    b.addEventListener("click",function(){curAC=+b.dataset.i;Snd.fx("blip");renderTabs();renderAC();});});
+}
+function renderAC(){
+  var a=ACS[curAC];
+  $("acbox").innerHTML='<p class="eyebrow">'+a.eyebrow+'</p><h3>'+a.n+" — "+a.name+"</h3>"+
+    '<p class="plain">'+a.plain+"</p>"+
+    '<div class="inset"><b>Your log entry should contain</b><ul>'+a.wants.map(function(w){return "<li>"+w+"</li>";}).join("")+"</ul></div>"+
+    '<p style="font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin:0 0 8px">Sentence starters — steal these</p>'+
+    a.starters.map(function(s){return '<div class="starter">'+s+"</div>";}).join("")+
+    '<div class="inset" style="margin-top:18px;background:#FBEEE9;border-color:var(--orange)"><b>The usual trap</b>'+a.trap+"</div>";
+}
+
+/* ---------- same day, three ways ---------- */
+var WAYS={
+ a:{lab:"What most people hand in",
+  txt:"Today we started our arcade game. We got into our groups and picked our idea. Then we used Gear Zero to make it. It didn't really work the way we wanted so we changed it a few times until it was better. We got quite a lot done. Next lesson we will keep working on it.",
+  v:["Not yet a Pass","Every sentence describes an action and stops. There is no reasoning anywhere in it, so a reader learns nothing about how this student thinks. \"It didn't really work\" — in what way? \"We changed it\" — changed what, to what, and why? \"Better\" — by what measure? This entry could have been written by someone who watched the lesson through a window."]},
+ b:{lab:"A solid, safe entry",
+  txt:"Today we started our arcade game. Our idea was a game where you rotate a platform to bounce a ball into targets, based on the mechanic slip about rotation that came out of the ice breaker. I was the driver, so I typed the prompts into Gear Zero. The first build gave us a ball that moved far too fast to control, which made the game frustrating rather than difficult. We reduced the ball speed and it felt more playable. We also changed the background to black because the ball was hard to see against the blue. Next lesson we want to add a scoring system.",
+  v:["Merit territory","A real improvement — there are decisions here, and two of them have reasons attached. The black background is justified by a genuine gameplay problem, which is exactly right. What's missing is the alternatives: why reduce ball speed rather than enlarge the platform or slow the whole game down? There's no feedback from anyone else, and no reflection on how the group worked. Solid, but it only reaches for three of the five criteria."]},
+ c:{lab:"Distinction territory",
+  txt:"We started building today. Our concept came from two ice breaker slips — \"rotation\" as the mechanic and \"panic\" as the feeling — so the core loop is rotating a platform to bounce a ball into targets before a timer runs out. I was the driver.\n\nThe first Gear Zero build was unplayable: the ball moved so fast that you couldn't react, which produced frustration rather than the panic we wanted. Those two feelings look similar and aren't — panic is when you can see the solution and might not reach it in time, frustration is when you can't see it at all. That distinction became the thing we designed against for the rest of the session.\n\nWe had three options. Slow the ball, enlarge the platform, or shrink the play area. Enlarging the platform would have made it too easy, and shrinking the area would have hidden the problem rather than solved it, so we cut ball speed by about a third. Better, but it made the game sluggish, so we put roughly half the speed back and instead gave the platform a faster rotation. That worked — the ball is still fast, but you feel like you could have caught it. Which is the panic we were after.\n\nI changed the background to black after Aoife pointed out she was losing the ball against the blue. She was right and I hadn't noticed it once, because I'd been staring at it for an hour. Worth remembering that I'm the worst person to judge readability on something I've been looking at all afternoon.\n\nOn how we worked: I typed everything, which meant Aoife and Ciarán were mostly watching. That was inefficient and it's why we only got three builds done. Next session Ciarán drives while I record, so we're not bottlenecked on one keyboard.\n\nNext session: add scoring, and test whether anyone outside our group understands the game without being told. Attached — screenshots of builds 1, 2 and 3, and the three prompts I used.",
+  v:["Distinction territory","Notice this student didn't do more work than the other two — they did the same afternoon. What they wrote down is the thinking that was already in their head. There's research informing a decision (the panic/frustration distinction), rejected alternatives with reasons, a technical change that was then partly reversed with an explanation, feedback from a named person and what happened to it, an honest admission about their own blind spot, a real observation about how the group worked and a concrete fix, and named evidence attached. That's all five criteria in one entry, and none of it is invented."]}
+};
+var curWay="a";
+function renderWays(){
+  var labels={a:"Level 1",b:"Level 2",c:"Level 3"};
+  $("seg").innerHTML=["a","b","c"].map(function(k){
+    return '<button data-w="'+k+'" aria-pressed="'+(k===curWay)+'">'+labels[k]+"</button>";}).join("");
+  Array.prototype.forEach.call($("seg").querySelectorAll("button"),function(b){
+    b.addEventListener("click",function(){curWay=b.dataset.w;Snd.fx("blip");renderWays();});});
+  var w=WAYS[curWay];
+  $("segout").innerHTML='<span class="lab">'+w.lab+"</span>"+
+    '<div class="txt">'+w.txt.split("\n\n").map(function(p){return "<p>"+p+"</p>";}).join("")+"</div>"+
+    '<div class="verdict"><b>'+w.v[0]+"</b>"+w.v[1]+"</div>";
+}
+
+/* ---------- fix the sentence ---------- */
+var FQUIZ=[
+ {q:"\"We used Gear Zero to make the game.\"",
+  a:["\"We used Gear Zero to build a playable version of the game.\"",
+     "\"I described the game to Gear Zero as 'rotate a platform to bounce a ball into targets' and it built a playable version in about four minutes.\""],r:1,
+  fb:"The second names the actual prompt and the actual result. Anyone can say they used a tool; what shows skill is what you asked it for. Your prompts are technical decisions — treat them like settings, and write them down."},
+ {q:"\"It didn't look good so we changed it.\"",
+  a:["\"The ball was hard to see against the blue background, so we changed the background to black.\"",
+     "\"It didn't look very good so we changed the colours to make it better.\""],r:0,
+  fb:"\"Didn't look good\" is taste. \"Hard to see\" is a problem with a consequence for the player. Always convert an opinion into the effect it has on someone playing — that's the move that turns AC3 from a Pass into a Merit."},
+ {q:"\"Today went really well and we got loads done.\"",
+  a:["\"Today went well. We were productive and worked as a good team.\"",
+     "\"We got three builds done, which was more than I expected — mostly because we agreed the core mechanic before touching Gear Zero instead of arguing about it mid-build.\""],r:1,
+  fb:"The second says what \"well\" means and, more importantly, why it happened. A reason you can repeat is worth something. \"Good team\" is not a reason, it's a mood."},
+ {q:"\"I couldn't get the timer to work.\"",
+  a:["\"I couldn't get the timer to work so I left it and did something else.\"",
+     "\"I couldn't get the timer to work. I tried asking for it two different ways and neither built correctly, so I've left it and I'll ask James whether the problem is my wording or a limit of the tool.\""],r:1,
+  fb:"Failing is fine and normal. What's assessed is what you did about it. Naming what you tried, and what you'll do next, turns a dead end into evidence of problem solving — which is a whole criterion."},
+ {q:"\"Aoife said the ball was hard to see.\"",
+  a:["\"Aoife said the ball was hard to see and she was right, so I changed the background — and it's worth noting I'd stared at it for an hour without spotting it myself.\"",
+     "\"Aoife said the ball was hard to see. I agreed with her.\""],r:0,
+  fb:"Feedback is only evidence when you show what you did with it. The extra clause — noticing you'd gone blind to your own work — is genuine self-awareness, and that is exactly what separates the top band from the middle."},
+ {q:"\"Next lesson we will keep working on the game.\"",
+  a:["\"Next lesson we will continue developing the game and try to improve it.\"",
+     "\"Next lesson Ciarán drives so we're not bottlenecked on one keyboard, and I'll test the game on someone outside our group to see if they understand it without being told.\""],r:1,
+  fb:"\"Keep working on it\" is what you write when you haven't decided yet. A specific next action — one you could be held to — shows you're actually planning rather than just finishing the sentence."}
+];
+
+/* ---------- shared quiz engine ---------- */
+function makeQuiz(el,data,label,msgs){
+  var i=0,score=0;
+  function draw(){
+    if(i>=data.length){
+      var m=score===data.length?msgs[0]:(score>=data.length-2?msgs[1]:msgs[2]);
+      $(el).innerHTML='<p class="qq">'+score+" out of "+data.length+'</p><p style="font-size:16px">'+m+
+        '</p><button class="btn btn-sm" id="'+el+'-again" style="margin-top:10px">Try again</button>';
+      $(el+"-again").addEventListener("click",function(){i=0;score=0;Snd.fx("blip");draw();});
+      return;
+    }
+    var q=data[i];
+    $(el).innerHTML='<p class="qn">'+label+" "+(i+1)+" of "+data.length+" · score "+score+"</p>"+
+      '<p class="qq">'+q.q+"</p>"+
+      q.a.map(function(t,k){return '<button class="opt" data-i="'+k+'">'+t+"</button>";}).join("")+
+      '<div class="fb" id="'+el+'-fb" hidden></div>';
+    Array.prototype.forEach.call($(el).querySelectorAll(".opt"),function(b){
+      b.addEventListener("click",function(){
+        var k=+b.dataset.i,ok=(k===q.r);
+        if(ok)score++;
+        Snd.fx(ok?"right":"wrong");
+        Array.prototype.forEach.call($(el).querySelectorAll(".opt"),function(x){
+          x.disabled=true;
+          if(+x.dataset.i===q.r)x.classList.add("right");
+          else if(x===b)x.classList.add("wrong");});
+        var fb=$(el+"-fb");
+        fb.innerHTML="<b>"+(ok?"Correct":"Not quite")+"</b>"+q.fb+
+          '<div style="margin-top:12px"><button class="btn btn-sm" id="'+el+'-next">'+
+          (i===data.length-1?"See your score":"Next")+"</button></div>";
+        fb.hidden=false;
+        $(el+"-next").addEventListener("click",function(){i++;draw();});
+      });
+    });
+  }
+  draw();
+}
+
+/* ---------- glossary list ---------- */
+var gCat="all";
+function renderGloss(){
+  var q=$("search").value.toLowerCase().trim(),
+      labels={systems:"Systems",assessment:"Assessment",rules:"Rules",people:"People",task:"The task"},
+      keys=Object.keys(TERMS).filter(function(k){
+        var t=TERMS[k];
+        if(gCat!=="all"&&t[1]!==gCat)return false;
+        if(!q)return true;
+        return (t[0]+" "+t[2]).toLowerCase().indexOf(q)>-1;
+      }).sort(function(a,b){return TERMS[a][0].localeCompare(TERMS[b][0]);});
+  $("count").textContent=keys.length+" of "+Object.keys(TERMS).length+" terms";
+  $("glist").innerHTML=keys.length?keys.map(function(k){
+    var t=TERMS[k];
+    return '<div class="entry"><span class="cat">'+labels[t[1]]+'</span><b>'+t[0]+"</b><p>"+t[2]+"</p></div>";
+  }).join(""):'<div class="entry"><p>Nothing matches that. Try a shorter word, or ask — if it isn\'t here it should be.</p></div>';
+}
+$("search").addEventListener("input",renderGloss);
+Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(c){
+  c.addEventListener("click",function(){
+    gCat=c.dataset.c;
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"),function(x){
+      x.setAttribute("aria-pressed",String(x===c));});
+    Snd.fx("blip");renderGloss();
+  });
+});
+
+/* ---------- pages ---------- */
+var PAGES=["m1","m2","m3","m4","m5","m6","m7","a1","a2","a3","a4","a5","a6","a7","gl"],
+    NAMES={m1:"Start here",m2:"Timetable",m3:"Rules that bite",m4:"How grading works",m5:"Deadlines",
+           m6:"Getting help",m7:"Handbook quiz",a1:"Ice breaker",a2:"The brief",a3:"What a log is",
+           a4:"The five criteria",a5:"Same day, three ways",a6:"Fix the sentence",a7:"Template",gl:"Glossary"},
+    seen={},TOTAL=15;
+function go(id){
+  PAGES.forEach(function(p){$(p).hidden=(p!==id);});
+  Array.prototype.forEach.call(document.querySelectorAll(".nav-btn"),function(b){
+    b.setAttribute("aria-current",String(b.dataset.p===id));});
+  window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+  if(!seen[id]){
+    seen[id]=true;
+    var n=Object.keys(seen).length;
+    $("progtxt").textContent=n+"/"+TOTAL;
+    document.querySelector(".progress-bar i").style.width=(n/TOTAL*100)+"%";
+    if(n===TOTAL){Snd.fx("done");toast("That's the whole day. Now go and argue about mechanics.","Complete");}
+    else{Snd.fx("unlock");toast(NAMES[id]);}
+  } else {Snd.fx("move");}
+}
+Array.prototype.forEach.call(document.querySelectorAll(".nav-btn"),function(b){
+  b.addEventListener("click",function(){go(b.dataset.p);});});
+
+/* ---------- boot ---------- */
+$("start").addEventListener("click",function(){
+  if(!Snd.on){var on=Snd.toggle();
+    $("sound").textContent=on?"♪ Sound on":"♪ Sound off";
+    $("sound").setAttribute("aria-pressed",String(on));}
+  $("title").style.display="none";
+  $("shell").hidden=false;
+
+  renderCourse();renderTimetable();renderRules();renderServices();
+  renderRounds();renderTabs();renderAC();renderWays();renderGloss();
+
+  makeQuiz("hquiz",HQUIZ,"Question",[
+    "Full marks. You now know more about how this course works than most people do in March.",
+    "Strong. The ones people miss are usually the small-looking ones — the email address and the filename.",
+    "Worth another look at sections 03 and 05. Every question came from something students get caught by every year."]);
+  makeQuiz("fquiz",FQUIZ,"Sentence",[
+    "Full marks. You can clearly tell the difference — the only question is whether you write like that when it's your own log at four o'clock on a Thursday.",
+    "Good. The pattern in every answer is the same: specific beats general, and a reason beats an action.",
+    "Worth running through again. Every stronger option does one of two things — names something exactly, or explains why."]);
+
+  Array.prototype.forEach.call(
+    document.querySelectorAll("#m1 .steps li, #m1 .card p, #m4 .steps li, #m4 .card p, #m5 .card p, #m6 .card p, #a2 .card li, #a2 .steps li, #a2 .card p, #a3 .steps li"),
+    function(el){if(el.innerHTML.indexOf("{{")>-1)el.innerHTML=gloss(el.innerHTML);});
+
+  go("m1");
+});
+
+if(COURSE.title && COURSE.title.charAt(0)!=="["){
+  $("kicker").textContent="Belfast Met · "+COURSE.title+" · Day one";
+}
+</script>
+</body>
+</html>
