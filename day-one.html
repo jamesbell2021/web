@@ -264,6 +264,23 @@ td a{word-break:break-word}
     <li><b>Read the {{conduct|Student Code of Conduct}}</b> You agreed to it at enrolment. Worth knowing what you signed — there's a plain-English guide, quiz and digital sign-off at <a href="https://jamesbell2021.github.io/code-of-conduct/" target="_blank" rel="noopener">the Code of Conduct guide →</a></li>
   </ol>
 
+  <h3>Get your kit sorted</h3>
+  <div class="grid2">
+    <div class="card">
+      <h4>A fast USB drive</h4>
+      <p>Unreal project files are large, and they only get bigger as a project grows. Get a proper USB 3.0/3.1 drive with real capacity — 64GB minimum — not whatever's been sitting in a drawer since 2015. Back up to it every session, on top of anything you keep on {{canvas|Canvas}} or in the cloud. Systems fail; "it's gone" is still your problem, not the College's.</p>
+    </div>
+    <div class="card">
+      <h4 id="unrealHeading">Match your Unreal Engine version to college</h4>
+      <p id="unrealBody"></p>
+    </div>
+  </div>
+
+  <div class="card tint-t">
+    <h4>No decent PC at home? That's genuinely fine</h4>
+    <p>Coursework happens on your independent study days, not in the classroom — so it doesn't have to happen on your own machine. Any of the College's resource centres, not just this campus, have computers you can use. Bring your USB drive.</p>
+  </div>
+
   <div class="card tint-p">
     <h4>The one thing students get wrong every year</h4>
     <p>Every grade you receive during the year is <strong>provisional</strong>. It can go up or down. Nothing is final until it has been through internal verification, Pearson, and the College's Assessment Board. Section 04 explains why — read it before you start arguing about a mark.</p>
@@ -656,6 +673,7 @@ var COURSE = {
   startDate:    "7 September 2026",
   canvasLink:   "",            // paste your Canvas page URL
   teamsLink:    "",            // paste your Teams page URL
+  unrealVersion:"",            // e.g. "5.3" — the exact Unreal Engine version installed in college
   contacts: [
     ["Course coordinator &amp; personal tutor", "James Bell",    "JBell@belfastmet.ac.uk"],
     ["Curriculum Area Manager",                 "Janis Leaden",  "JLeaden@belfastmet.ac.uk"],
@@ -842,6 +860,18 @@ function renderCourse(){
     return '<div class="slot'+(r[3]?" brk":"")+'"><span class="t">'+r[0]+'</span><span class="w">'+r[1]+
       (r[2]?'<span class="d">'+r[2]+"</span>":"")+"</span></div>";
   }).join("");
+
+  if(COURSE.unrealVersion){
+    $("unrealHeading").textContent="Install Unreal Engine "+COURSE.unrealVersion+" — and only that";
+    $("unrealBody").innerHTML="Opening a project in a newer version of Unreal upgrades it, and it won't open in "+
+      "an older version afterwards. If you're installing Unreal at home, use the Epic Games Launcher to install "+
+      "<strong>exactly version "+COURSE.unrealVersion+"</strong> — not whatever it offers as the default.";
+  } else {
+    $("unrealBody").innerHTML="Opening a project in a newer version of Unreal upgrades it, and it won't open in "+
+      "an older version afterwards. If you're installing Unreal at home, install the <strong>exact version "+
+      "we're using in class</strong> through the Epic Games Launcher, not just whatever it offers as the default "+
+      "— check Canvas, or ask James if you're not sure which one.";
+  }
 }
 
 /* ---------- timetable ---------- */
